@@ -1,71 +1,23 @@
+import {  useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 import Lottie from "lottie-react";
-import { useState } from "react";
 import animationData from '../../lottie/register.json';
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
-import useAuth from "../../hooks/useAuth";
+import { Link } from "react-router-dom";
+import useAuth from '../../hooks/useAuth'
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const SignUp = () => {
+    const { register, handleSubmit, reset, formState: { errors }, } = useForm();
+   const{createUser,updateUserProfile}=useAuth();
+    const navigate = useNavigate();
+    const axiosPublic=useAxiosPublic();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState({});
-    const location = useLocation();
-    const navigate = useNavigate();
-   const {createUser,setUser}=useAuth();
-
-    const handleToSubmit = (e) => {
-        e.preventDefault();
-        const form = e.target;
-        const name = form.name.value;
-        const photoURL = form.photoURL.value;
-        const email = form.email.value;
-        const bloodGroup = form.bloodGroup.value;
-        const district = form.district.value;
-        const upazila = form.upazila.value;
-        const password = form.password.value;
-        const confirmPassword = form.confirmPassword.value;
-
-        if (password !== confirmPassword) {
-            setError({ ...error, confirmPassword: "Passwords do not match." });
-            return;
-        }
-
-        // Password validation
-        if (password.length < 6) {
-            setError({ ...error, password: "Password must be at least 6 characters." });
-            return;
-        } else if (!/[A-Z]/.test(password)) {
-            setError({ ...error, password: "At least one uppercase letter must be included." });
-            return;
-        } else if (!/[a-z]/.test(password)) {
-            setError({ ...error, password: "At least one lowercase letter must be included." });
-            return;
-        } else {
-            setError({ ...error, password: null });
-        }
-
-        // Create user
-        createUser(email, password)
-            .then((result) => {
-                const user = result.user;
-                setUser(user);
-                Swal.fire({
-                    position: "center",
-                    icon: "success",
-                    title: `Registration successful!`,
-                    text: `Welcome, ${name}!`,
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-                console.log("User created successfully:", user);
-                navigate(location.state ? location.state : "/");
-            })
-            .catch((err) => {
-                console.error("Error during registration:", err);
-                setError({ ...error, password: err.code });
-            });
-    };
 
     const togglePassword = (e) => {
         e.preventDefault();
@@ -77,37 +29,96 @@ const SignUp = () => {
         setShowConfirmPassword(!showConfirmPassword);
     };
 
+    const onSubmit = (data) => {
+        if (data.password !== data.confirmPassword) {
+            setError({ ...error, confirmPassword: "Passwords do not match." });
+            return;
+        }
+
+        // Password validation
+        if (data.password.length < 6) {
+            setError({ ...error, password: "Password must be at least 6 characters." });
+            return;
+        } else if (!/[A-Z]/.test(data.password)) {
+            setError({ ...error, password: "At least one uppercase letter must be included." });
+            return;
+        } else if (!/[a-z]/.test(data.password)) {
+            setError({ ...error, password: "At least one lowercase letter must be included." });
+            return;
+        } else {
+            setError({ ...error, password: null });
+        }
+
+        createUser(data.email, data.password)
+            .then(result => {
+                const loggedUser = result.user;
+                updateUserProfile(data.name, data.photoURL)
+                    .then(() => {
+                        const userInfo = {
+                            name: data.name,
+                            email: data.email,
+                            bloodGroup: data.bloodGroup,
+                            district: data.district,
+                            upazila: data.upazila,
+                            status:'Active',
+                            role:'Donor'
+                        };
+                        axiosPublic.post('/users', userInfo)
+                            .then(res => {
+                                if (res.data.insertedId) {
+                                    reset();
+                                    Swal.fire({
+                                        position: 'top-end',
+                                        icon: 'success',
+                                        title: 'User created successfully.',
+                                        showConfirmButton: false,
+                                        timer: 1500
+                                    });
+                                    navigate('/');
+                                }
+                            });
+                    })
+                    .catch(error => console.log(error));
+            });
+    };
+
     return (
         <>
+            <Helmet>
+                <title>Blood-Bridge || SignUp</title>
+            </Helmet>
             <div className="min-h-screen justify-center items-center">
                 <div className="hero bg-base-200 min-h-screen">
                     <div className="hero-content flex-col lg:flex-row-reverse">
                         <div className="card py-7 bg-base-100 w-full max-w-lg shrink-0 shadow-2xl">
                             <h3 className="text-3xl font-bold text-center">Create Your Account</h3>
-                            <form onSubmit={handleToSubmit} className="card-body grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <form onSubmit={handleSubmit(onSubmit)} className="card-body grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Name</span>
                                     </label>
-                                    <input name="name" type="text" placeholder="name" className="input input-bordered" required />
+                                    <input name="name" type="text" placeholder="name" className="input input-bordered" required {...register("name", { required: true })} />
+                                    {errors.name && <span className="text-red-600 text-xs">Name is required</span>}
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Photo URL</span>
                                     </label>
-                                    <input type="text" placeholder="photo URL" name="photoURL" className="input input-bordered" required />
+                                    <input type="text" placeholder="photo URL" name="photoURL" className="input input-bordered" required {...register("photoURL", { required: true })} />
+                                    {errors.photoURL && <span className="text-red-600 text-xs">Photo URL is required</span>}
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Email</span>
                                     </label>
-                                    <input type="email" placeholder="email" name="email" className="input input-bordered" required />
+                                    <input type="email" placeholder="email" name="email" className="input input-bordered" required {...register("email", { required: true })} />
+                                    {errors.email && <span className="text-red-600 text-xs">Email is required</span>}
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Blood Group</span>
                                     </label>
-                                    <select name="bloodGroup" className="select select-bordered" required>
+                                    <select name="bloodGroup" className="select select-bordered" required {...register("bloodGroup", { required: true })}>
                                         <option value="A+">A+</option>
                                         <option value="A-">A-</option>
                                         <option value="B+">B+</option>
@@ -117,12 +128,13 @@ const SignUp = () => {
                                         <option value="O+">O+</option>
                                         <option value="O-">O-</option>
                                     </select>
+                                    {errors.bloodGroup && <span className="text-red-600 text-xs">Blood Group is required</span>}
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">District</span>
                                     </label>
-                                    <select name="district" className="select select-bordered" required>
+                                    <select name="district" className="select select-bordered" required {...register("district", { required: true })}>
                                         <option value="Dhaka">Dhaka</option>
                                         <option value="Chittagong">Chittagong</option>
                                         <option value="Khulna">Khulna</option>
@@ -131,16 +143,18 @@ const SignUp = () => {
                                         <option value="Barisal">Barisal</option>
                                         <option value="Rangpur">Rangpur</option>
                                     </select>
+                                    {errors.district && <span className="text-red-600 text-xs">District is required</span>}
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Upazila</span>
                                     </label>
-                                    <select name="upazila" className="select select-bordered" required>
+                                    <select name="upazila" className="select select-bordered" required {...register("upazila", { required: true })}>
                                         <option value="Upazila 1">Upazila 1</option>
                                         <option value="Upazila 2">Upazila 2</option>
                                         <option value="Upazila 3">Upazila 3</option>
                                     </select>
+                                    {errors.upazila && <span className="text-red-600 text-xs">Upazila is required</span>}
                                 </div>
                                 <div className="form-control relative">
                                     <label className="label">
@@ -150,10 +164,11 @@ const SignUp = () => {
                                         type={showPassword ? 'text' : 'password'}
                                         placeholder="password"
                                         name="password"
-                                        className="input input-bordered" required />
+                                        className="input input-bordered" required {...register("password", { required: true })} />
                                     <button onClick={togglePassword} className="absolute right-4 top-12 text-xl">
                                         {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
                                     </button>
+                                    {errors.password && <span className="text-red-600 text-xs">Password is required</span>}
                                 </div>
                                 {
                                     error.password && (
@@ -170,10 +185,11 @@ const SignUp = () => {
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         placeholder="confirm password"
                                         name="confirmPassword"
-                                        className="input input-bordered" required />
+                                        className="input input-bordered" required {...register("confirmPassword", { required: true })} />
                                     <button onClick={toggleConfirmPassword} className="absolute right-4 top-12 text-xl">
                                         {showConfirmPassword ? <IoMdEyeOff /> : <IoMdEye />}
                                     </button>
+                                    {errors.confirmPassword && <span className="text-red-600 text-xs">Confirm Password is required</span>}
                                 </div>
                                 {
                                     error.confirmPassword && (

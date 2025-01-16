@@ -3,6 +3,14 @@ import MainLayout from "../Layout/MainLayout";
 import Home from "../pages/Home/Home";
 import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
+import Dashboard from "../Layout/Dashboard";
+import DonorHome from "../pages/Dashboard/Donor/DonorHome/DonorHome";
+import MyDonationRequests from "../pages/Dashboard/Donor/MyDonationRequests/MyDonationRequests";
+import CreateDonationRequest from "../pages/Dashboard/Donor/CreateDonationRequest/CreateDonationRequest";
+import AllUsers from "../pages/Dashboard/Admin/AllUsers/AllUsers";
+import AllBloodDonationRequests from "../pages/Dashboard/Admin/AllBloodDonationRequests/AllBloodDonationRequests";
+
+
 
 
 const router = createBrowserRouter([
@@ -22,7 +30,30 @@ const router = createBrowserRouter([
        }
 
       ]
-    },
+    },{
+      path:'/dashboard',
+      element:<Dashboard></Dashboard>,
+      children:[
+        {
+          path:'donorHome',
+          element:<DonorHome></DonorHome>
+        },{
+          path:'my-donation-requests',
+          element:<MyDonationRequests></MyDonationRequests>
+        },{
+          path:'create-donation-request',
+          element:<CreateDonationRequest></CreateDonationRequest>
+        },
+        // Admin routes
+        {
+          path:'all-users',
+          element:<AllUsers></AllUsers>
+        },{
+          path:'all-blood-donation-request',
+          element:<AllBloodDonationRequests></AllBloodDonationRequests>
+        }
+      ]
+    }
   ]);
 
 export default router;
