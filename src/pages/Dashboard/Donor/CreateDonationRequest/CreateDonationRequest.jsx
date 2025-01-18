@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import useAxiosPublic from "../../../../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
+import useAuth from "../../../../hooks/useAuth";
 
 
 const CreateDonationRequest = () => {
@@ -17,6 +19,7 @@ const CreateDonationRequest = () => {
     const [requestMessage, setRequestMessage] = useState("");
     const [status] = useState("pending"); 
     const axiosPublic=useAxiosPublic();
+    const {user}=useAuth();
 
     const [districts, setDistricts] = useState([]); 
     const [upazilas, setUpazilas] = useState([]);
@@ -43,8 +46,7 @@ const CreateDonationRequest = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        // Prepare the data to send to the backend
+       const userEmail=user.email
         const donationRequest = {
             requesterName,
             requesterEmail,
@@ -57,19 +59,29 @@ const CreateDonationRequest = () => {
             donationDate,
             donationTime,
             requestMessage,
-            status, // Default value is "pending"
+            status,
+            userEmail
+            
         };
-
+    
         try {
-            // API call to create the donation request
             const response = await axiosPublic.post("/donation-requests", donationRequest);
             console.log("Donation request created successfully:", response.data);
-            // Redirect user or show success message after creating the request
+            // Handle success (e.g., show a success message or redirect)
+            if(response.data.insertedId){
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Donation request created successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                  });
+            }
         } catch (error) {
             console.error("Error creating donation request:", error);
         }
     };
-
+    
 
 
     return (

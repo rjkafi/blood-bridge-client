@@ -9,6 +9,11 @@ import MyDonationRequests from "../pages/Dashboard/Donor/MyDonationRequests/MyDo
 import CreateDonationRequest from "../pages/Dashboard/Donor/CreateDonationRequest/CreateDonationRequest";
 import AllUsers from "../pages/Dashboard/Admin/AllUsers/AllUsers";
 import AllBloodDonationRequests from "../pages/Dashboard/Admin/AllBloodDonationRequests/AllBloodDonationRequests";
+import ContentManagement from "../pages/Dashboard/Admin/ContentManagement/ContentManagement";
+import AddBlog from "../pages/Dashboard/Admin/AddBlog/AddBlog";
+import VolunteerHome from "../pages/Dashboard/Volunteer/VolunteerHome/VolunteerHome";
+import VolunteerContentManagement from "../pages/Dashboard/Volunteer/VolunteerContentManagement/VolunteerContentManagement";
+import VolunteerBloodRequests from "../pages/Dashboard/Volunteer/VolunteerBloodRequests/VolunteerBloodRequests";
 
 
 
@@ -51,7 +56,28 @@ const router = createBrowserRouter([
         },{
           path:'all-blood-donation-request',
           element:<AllBloodDonationRequests></AllBloodDonationRequests>
-        }
+        },{
+          path:'content-management',
+          element:<ContentManagement></ContentManagement>,
+          children:[
+            {
+              path:'add-blog',
+              element:<AddBlog></AddBlog>
+            }
+          ]
+        },
+        // Volunteer routes
+        {
+          path:'volunteer-home',
+          element:<VolunteerHome></VolunteerHome>
+        }, {
+          path: 'all-blood-donation-request',
+          element: <VolunteerBloodRequests />
+        },
+        {
+          path: 'content-management',
+          element: <VolunteerContentManagement />
+        },
       ]
     }
   ]);
