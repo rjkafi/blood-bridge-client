@@ -1,58 +1,98 @@
-import { useEffect, useState } from "react";
-import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import React, { useState, useEffect } from "react";
 import useAuth from "../../../../hooks/useAuth";
+import useAxiosPublic from "../../../../hooks/useAxiosPublic";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const MyDonationRequests = () => {
-    const [donationRequests, setDonationRequests] = useState([]);
-    const [filteredRequests, setFilteredRequests] = useState([]);
-    const [page, setPage] = useState(1);
     const [statusFilter, setStatusFilter] = useState("");
-    const requestsPerPage = 5;
-    const axiosSecure = useAxiosSecure();
-    const {user}=useAuth()
+    const axiosPublic = useAxiosPublic();
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
-    // Assuming donorEmail is part of the logged-in user info
-    const donorEmail = user.email;
+    const [donationRequests, setDonationRequests] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         const fetchDonationRequests = async () => {
+            if (!user) return;
+
+            // console.log("User Info:", user); 
+
+            setIsLoading(true);
+            setError(null);
+
             try {
-                const response = await axiosSecure.get("/donation-requests", {
-                    params: {
-                        page,
-                        filter: statusFilter,
-                        donorEmail, // Pass donor email to the API
-                    }
-                });
-                setDonationRequests(response.data.data);
-                setFilteredRequests(response.data.data);
+                const response = await axiosPublic.get('/donation-requests',
+                    { email: user.email }, { filter: statusFilter }
+                );
+                console.log("API Response:", response.data); 
+                setDonationRequests(response.data.data || []);
             } catch (error) {
                 console.error("Error fetching donation requests:", error);
+                setError("Failed to load donation requests.");
+            } finally {
+                setIsLoading(false);
             }
         };
 
         fetchDonationRequests();
-    }, [page, statusFilter, donorEmail]);
+    }, [user, statusFilter, axiosPublic]);
 
-    // Filter donation requests based on status
     const filterByStatus = (status) => {
         setStatusFilter(status);
-        setPage(1);  // Reset to the first page when the filter changes
+    };
+    // Handle Edit Button
+    const handleEdit = (id) => {
+        // Redirect to the edit page with the donation request ID
+        navigate(`/dashboard/edit-donation-request/${id}`)
+    };
+    // Handle Delete Button
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    console.log("Deleting donation request with ID:", id);
+                    await axiosPublic.delete(`/donation-requests/${id}`);
+                    setDonationRequests(prevRequests => prevRequests.filter(request => request._id !== id));
+                    Swal.fire({
+                        title: "Deleted!",
+                        text: "Your request has been deleted.",
+                        icon: "success"
+                    });
+                } catch (error) {
+                    console.error('Error deleting request:', error);
+                    Swal.fire({
+                        title: "Error!",
+                        text: "There was an issue deleting your request.",
+                        icon: "error"
+                    });
+                }
+            }
+        });
     };
 
-    // Handle page change for pagination
-    const handlePageChange = (newPage) => {
-        setPage(newPage);
-    };
+    if (isLoading) {
+        return <p>Loading...</p>;
+    }
 
-    // Calculate the current page's requests
-    const currentRequests = filteredRequests.slice((page - 1) * requestsPerPage, page * requestsPerPage);
+    if (error) {
+        return <p>{error}</p>;
+    }
 
     return (
         <div>
-            <h2 className="text-2xl mb-4">My Donation Requests</h2>
+            <h2 className="text-2xl font-semibold text-center mb-4">My Donation Requests</h2>
 
-            {/* Filtering Section */}
             <div className="mb-4">
                 <select
                     value={statusFilter}
@@ -67,73 +107,59 @@ const MyDonationRequests = () => {
                 </select>
             </div>
 
-            {/* Donation Requests Table */}
-            <div className="overflow-x-auto">
-  <table className="table table-xs">
-    <thead>
-      <tr>
-        <th></th>
-       <th>Recipient Name</th>
-        <th>Location</th>
-        <th>Donation Date</th>
-        <th>Blood Group</th>
-        <th>Status</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      {currentRequests.map((request,index)=>(
-        <tr key={request._id}>
-            <td>{index+1}</td>
-        <td>{request.recipientName}</td>
-        <td>{`${request.recipientDistrict}, ${request.recipientUpazila}`}</td>
-        <td>{request.donationDate}</td>
-        <td>{request.bloodGroup}</td>
-        <td>{request.status}</td>
-        <td className="flex space-x-2">
-          {request.status === "inprogress" && (
-            <>
-              <button className="btn btn-success">Done</button>
-              <button className="btn btn-danger">Cancel</button>
-            </>
-          )}
-          <button className="btn btn-primary">Edit</button>
-          <button className="btn bg-red-400 text-white">Delete</button>
-          <button className="btn btn-info text-white">View</button>
-        </td>
-      </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
-
-
-            {/* Pagination Section */}
-            <div className="flex justify-between items-center mt-4">
-                <button
-                    onClick={() => handlePageChange(page - 1)}
-                    disabled={page === 1}
-                    className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-                >
-                    Previous
-                </button>
-                <span>
-                    Page {page} of {Math.ceil(filteredRequests.length / requestsPerPage)}
-                </span>
-                <button
-                    onClick={() => handlePageChange(page + 1)}
-                    disabled={page === Math.ceil(filteredRequests.length / requestsPerPage)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
-                >
-                    Next
-                </button>
-            </div>
+            {donationRequests.length > 0 ? (
+                <div className="overflow-x-auto">
+                    <table className="table table-xs">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Recipient Name</th>
+                                <th>Location</th>
+                                <th>Donation Date</th>
+                                <th>Blood Group</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {donationRequests.map((request, index) => (
+                                <tr key={request._id}>
+                                    <td>{index + 1}</td>
+                                    <td>{request.recipientName}</td>
+                                    <td>{`${request.recipientDistrict}, ${request.recipientUpazila}`}</td>
+                                    <td>{request.donationDate}</td>
+                                    <td>{request.bloodGroup}</td>
+                                    <td>{request.status}</td>
+                                    <td className="flex space-x-2">
+                                        <button
+                                            className="btn btn-primary"
+                                            onClick={() => handleEdit(request._id)} 
+                                        >
+                                            Edit
+                                        </button>
+                                        <button
+                                            className="btn bg-red-400 text-white"
+                                            onClick={() => handleDelete(request._id)}
+                                        >
+                                            Delete
+                                        </button>
+                                        <button
+                                            className="btn btn-info text-white"
+                                            onClick={() => navigate(`/dashboard/donation-request-details/${request._id}`)} 
+                                        >
+                                            View
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            ) : (
+                <p>No donation requests found.</p>
+            )}
         </div>
     );
 };
 
 export default MyDonationRequests;
-
-
-
-

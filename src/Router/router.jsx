@@ -14,6 +14,9 @@ import AddBlog from "../pages/Dashboard/Admin/AddBlog/AddBlog";
 import VolunteerHome from "../pages/Dashboard/Volunteer/VolunteerHome/VolunteerHome";
 import VolunteerContentManagement from "../pages/Dashboard/Volunteer/VolunteerContentManagement/VolunteerContentManagement";
 import VolunteerBloodRequests from "../pages/Dashboard/Volunteer/VolunteerBloodRequests/VolunteerBloodRequests";
+import EditDonationRequest from "../Shared/EditDonationRequest";
+import DonationRequestDetails from "../Shared/DonationRequestDetails";
+
 
 
 
@@ -77,7 +80,13 @@ const router = createBrowserRouter([
         {
           path: 'content-management',
           element: <VolunteerContentManagement />
-        },
+        },{
+          path:'edit-donation-request/:id',
+          element:<EditDonationRequest></EditDonationRequest>,
+        },{
+          path:'donation-request-details/:id',
+          element:<DonationRequestDetails></DonationRequestDetails>
+        }
       ]
     }
   ]);

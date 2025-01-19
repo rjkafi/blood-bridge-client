@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useAxiosPublic from "../../../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import useAuth from "../../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 
 const CreateDonationRequest = () => {
@@ -20,6 +21,7 @@ const CreateDonationRequest = () => {
     const [status] = useState("pending"); 
     const axiosPublic=useAxiosPublic();
     const {user}=useAuth();
+    const navigate=useNavigate();
 
     const [districts, setDistricts] = useState([]); 
     const [upazilas, setUpazilas] = useState([]);
@@ -76,6 +78,7 @@ const CreateDonationRequest = () => {
                     showConfirmButton: false,
                     timer: 1500
                   });
+                  navigate("/dashboard/my-donation-requests")
             }
         } catch (error) {
             console.error("Error creating donation request:", error);
@@ -87,7 +90,7 @@ const CreateDonationRequest = () => {
     return (
         <>
             <div>
-            <h2 className="text-2xl mb-4">Create Donation Request</h2>
+            <h2 className="text-2xl mb-4 font-semibold text-center">Create Donation Request</h2>
             
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
