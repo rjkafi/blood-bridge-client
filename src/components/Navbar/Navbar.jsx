@@ -6,7 +6,7 @@ const Navbar = () => {
   const {user,signOutUser}=useAuth();
     const navOptions = <>
     <li><Link to='/'>Home</Link></li>
-    <li><Link to='/requests'>donation requests</Link></li>
+    <li><Link to='/donation-requests'>donation requests</Link></li>
     <li><Link to='/blog'>Blog</Link></li>
     <li><Link to='/login'>Login</Link></li>
     <li><Link to='/register'>Registration</Link></li>

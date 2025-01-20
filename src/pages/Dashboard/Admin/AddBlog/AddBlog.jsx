@@ -2,9 +2,9 @@ import { useForm } from "react-hook-form";
 import JoditEditor from "jodit-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import 'react-toastify/dist/ReactToastify.css';
-import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import useAxiosPublic from "../../../../hooks/useAxiosPublic";
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
@@ -14,61 +14,45 @@ const AddBlog = () => {
   const [content, setContent] = useState('');
   const navigate = useNavigate();
   const axiosSecure = useAxiosSecure();
+  const axiosPublic=useAxiosPublic();
 
   const onSubmit = async (data) => {
-    const { title, thumbnail, content } = data;
-    
     try {
-      // Image upload to ImageBB
-      const formData = new FormData();
-      formData.append("image", thumbnail[0]);
+      // Prepare image file for upload
+      const imageFile={image: data.image[0]};
 
-      const imageRes = await axiosSecure.post(image_hosting_api, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      // Image upload to imgbb
+      const res = await axiosPublic.post(image_hosting_api, imageFile, {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
       });
 
-      // Check if image upload is successful
-      if (imageRes.data.success) {
-        const imageUrl = imageRes.data.data.display_url;
-
-        // Create blog data
+      if (res.data.success) {
+        // Create blog data with image URL
         const blogData = {
-          title,
-          thumbnail: imageUrl,
+          title: data.title,
+          image: res.data.data.display_url,
           content,
         };
 
         // Post blog data to the server
         const blogRes = await axiosSecure.post('/blogs', blogData);
-
-        if (blogRes.data && blogRes.data.insertedId) {
+        if (blogRes.data.insertedId) {
+          // Show success popup
           Swal.fire({
             position: "top-end",
             icon: "success",
-            title: "Blog created successfully!",
+            title: `${data.title} Added Successfully`,
             showConfirmButton: false,
             timer: 1500,
           });
           navigate('/dashboard/content-management');
-        } else {
-          Swal.fire({
-            position: "top-end",
-            icon: "error",
-            title: "Failed to create blog",
-            showConfirmButton: false,
-            timer: 1500,
-          });
         }
       }
+      reset();
     } catch (error) {
-      console.error("Error creating blog:", error);
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: "Failed to create blog",
-        showConfirmButton: false,
-        timer: 1500,
-      });
+      console.error("Error submitting the form:", error);
     }
   };
 
@@ -85,12 +69,12 @@ const AddBlog = () => {
           />
         </div>
 
-        <div className="mb-3 space-x-2">
-          <label>Thumbnail</label>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Thumbnail</label>
           <input
             type="file"
-            {...register("thumbnail", { required: true })}
-            className="file-input w-full max-w-xs"
+            {...register('image', { required: true })}
+            className="mt-1 block px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-orange-500 focus:border-orange-500 sm:text-sm"
           />
         </div>
 
@@ -100,7 +84,7 @@ const AddBlog = () => {
             value={content}
             onChange={(newContent) => {
               setContent(newContent);
-              setValue("content", newContent); // Set the content value in react-hook-form
+              setValue("content", newContent); // Sync Jodit content with react-hook-form
             }}
           />
         </div>

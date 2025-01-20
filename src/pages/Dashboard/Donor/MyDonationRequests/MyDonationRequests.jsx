@@ -145,7 +145,7 @@ const MyDonationRequests = () => {
                                         </button>
                                         <button
                                             className="btn btn-info text-white"
-                                            onClick={() => navigate(`/dashboard/donation-request-details/${request._id}`)} 
+                                            onClick={() => navigate(`/donation-request-details/${request._id}`)} 
                                         >
                                             View
                                         </button>

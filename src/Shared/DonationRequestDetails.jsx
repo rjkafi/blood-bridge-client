@@ -35,8 +35,8 @@ const DonationRequestDetails = () => {
   }
 
   return (
-    <div>
-      <h2 className="text-2xl font-semibold text-center mb-4">Donation Request Details</h2>
+    <div className="p-20 mx-auto">
+      <h2 className="text-2xl font-semibold text-center mt-8">Donation Request Details</h2>
       {donationRequest && (
         <div className="space-y-2 mt-12">
           <div className="flex space-x-2 items-center">

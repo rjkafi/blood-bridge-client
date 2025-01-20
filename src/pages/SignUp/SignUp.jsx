@@ -1,4 +1,7 @@
-import {  useState } from "react";
+import districts from '/public/districts.json';
+import upazilas from '/public/upazilas.json';
+
+import { useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
@@ -10,14 +13,20 @@ import { Link } from "react-router-dom";
 import useAuth from '../../hooks/useAuth'
 import useAxiosPublic from "../../hooks/useAxiosPublic";
 
+
+const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
+
+
 const SignUp = () => {
     const { register, handleSubmit, reset, formState: { errors }, } = useForm();
-   const{createUser,updateUserProfile}=useAuth();
+    const { createUser, updateUserProfile } = useAuth();
     const navigate = useNavigate();
-    const axiosPublic=useAxiosPublic();
+    const axiosPublic = useAxiosPublic();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState({});
+
 
     const togglePassword = (e) => {
         e.preventDefault();
@@ -49,34 +58,50 @@ const SignUp = () => {
             setError({ ...error, password: null });
         }
 
+
+
         createUser(data.email, data.password)
             .then(result => {
                 const loggedUser = result.user;
                 updateUserProfile(data.name, data.photoURL)
-                    .then(() => {
-                        const userInfo = {
-                            name: data.name,
-                            email: data.email,
-                            bloodGroup: data.bloodGroup,
-                            district: data.district,
-                            upazila: data.upazila,
-                            status:'Active',
-                            role:'Donor'
-                        };
-                        axiosPublic.post('/users', userInfo)
-                            .then(res => {
-                                if (res.data.insertedId) {
-                                    reset();
-                                    Swal.fire({
-                                        position: 'top-end',
-                                        icon: 'success',
-                                        title: 'User created successfully.',
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    });
-                                    navigate('/');
-                                }
-                            });
+                    .then(async () => {
+                        // Prepare image file for upload
+                        const imageFile = { image: data.image[0] };
+
+                        // Image upload to imgbb
+                        const res = await axiosPublic.post(image_hosting_api, imageFile, {
+                            headers: {
+                                "content-type": "multipart/form-data",
+                            },
+                        });
+                        if (res.data.success) {
+                            const userInfo = {
+                                name: data.name,
+                                email: data.email,
+                                image: res.data.data.display_url,
+                                bloodGroup: data.bloodGroup,
+                                district: data.district,
+                                upazila: data.upazila,
+                                status: 'Active',
+                                role: 'Donor'
+                            };
+                            axiosPublic.post('/users', userInfo)
+                                .then(res => {
+                                    if (res.data.insertedId) {
+                                        reset();
+                                        Swal.fire({
+                                            position: 'top-end',
+                                            icon: 'success',
+                                            title: 'User created successfully.',
+                                            showConfirmButton: false,
+                                            timer: 1500
+                                        });
+                                        navigate('/');
+                                    }
+                                });
+                        }
+
+
                     })
                     .catch(error => console.log(error));
             });
@@ -101,11 +126,12 @@ const SignUp = () => {
                                     {errors.name && <span className="text-red-600 text-xs">Name is required</span>}
                                 </div>
                                 <div className="form-control">
-                                    <label className="label">
-                                        <span className="label-text">Photo URL</span>
-                                    </label>
-                                    <input type="text" placeholder="photo URL" name="photoURL" className="input input-bordered" required {...register("photoURL", { required: true })} />
-                                    {errors.photoURL && <span className="text-red-600 text-xs">Photo URL is required</span>}
+                                    <label className=" text-sm font-medium text-gray-700">Image</label>
+                                    <input
+                                        type="file"
+                                        {...register('image', { required: true })}
+                                        className="input input-bordered py-2 mt-4"
+                                    />
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
@@ -135,13 +161,12 @@ const SignUp = () => {
                                         <span className="label-text">District</span>
                                     </label>
                                     <select name="district" className="select select-bordered" required {...register("district", { required: true })}>
-                                        <option value="Dhaka">Dhaka</option>
-                                        <option value="Chittagong">Chittagong</option>
-                                        <option value="Khulna">Khulna</option>
-                                        <option value="Sylhet">Sylhet</option>
-                                        <option value="Rajshahi">Rajshahi</option>
-                                        <option value="Barisal">Barisal</option>
-                                        <option value="Rangpur">Rangpur</option>
+                                        <option value="">Select District</option>
+                                        {districts.map((district) => (
+                                            <option key={district.id} value={district.name}>
+                                                {district.name}
+                                            </option>
+                                        ))}
                                     </select>
                                     {errors.district && <span className="text-red-600 text-xs">District is required</span>}
                                 </div>
@@ -150,9 +175,12 @@ const SignUp = () => {
                                         <span className="label-text">Upazila</span>
                                     </label>
                                     <select name="upazila" className="select select-bordered" required {...register("upazila", { required: true })}>
-                                        <option value="Upazila 1">Upazila 1</option>
-                                        <option value="Upazila 2">Upazila 2</option>
-                                        <option value="Upazila 3">Upazila 3</option>
+                                        <option value="Upazila 1">Select Upazila</option>
+                                        {upazilas.map((upazila) => (
+                                            <option key={upazila.id} value={upazila.name}>
+                                                {upazila.name}
+                                            </option>
+                                        ))}
                                     </select>
                                     {errors.upazila && <span className="text-red-600 text-xs">Upazila is required</span>}
                                 </div>

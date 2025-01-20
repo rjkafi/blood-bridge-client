@@ -16,6 +16,8 @@ import VolunteerContentManagement from "../pages/Dashboard/Volunteer/VolunteerCo
 import VolunteerBloodRequests from "../pages/Dashboard/Volunteer/VolunteerBloodRequests/VolunteerBloodRequests";
 import EditDonationRequest from "../Shared/EditDonationRequest";
 import DonationRequestDetails from "../Shared/DonationRequestDetails";
+import Search from "../pages/Search/Search";
+import DonationRequests from "../pages/DonationRequests/DonationRequests";
 
 
 
@@ -35,7 +37,16 @@ const router = createBrowserRouter([
        },{
         path:'register',
         element:<SignUp></SignUp>
-       }
+       },{
+        path:'search',
+        element:<Search></Search>
+       },{
+        path:"donation-requests",
+        element:<DonationRequests></DonationRequests>
+       },,{
+        path:'donation-request-details/:id',
+        element:<DonationRequestDetails></DonationRequestDetails>
+      }
 
       ]
     },{
@@ -61,20 +72,18 @@ const router = createBrowserRouter([
           element:<AllBloodDonationRequests></AllBloodDonationRequests>
         },{
           path:'content-management',
-          element:<ContentManagement></ContentManagement>,
-          children:[
-            {
-              path:'add-blog',
-              element:<AddBlog></AddBlog>
-            }
-          ]
+          element:<ContentManagement role={'Volunteer'}></ContentManagement>,
+        },
+        {
+          path:'add-blog',
+          element:<AddBlog></AddBlog>
         },
         // Volunteer routes
         {
           path:'volunteer-home',
           element:<VolunteerHome></VolunteerHome>
         }, {
-          path: 'all-blood-donation-request',
+          path: 'all-blood-donations-request',
           element: <VolunteerBloodRequests />
         },
         {
@@ -83,9 +92,6 @@ const router = createBrowserRouter([
         },{
           path:'edit-donation-request/:id',
           element:<EditDonationRequest></EditDonationRequest>,
-        },{
-          path:'donation-request-details/:id',
-          element:<DonationRequestDetails></DonationRequestDetails>
         }
       ]
     }

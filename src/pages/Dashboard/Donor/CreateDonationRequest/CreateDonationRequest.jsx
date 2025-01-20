@@ -3,15 +3,16 @@ import useAxiosPublic from "../../../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import useAuth from "../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-
+import districts from '/public/districts.json';
+import upazilas from '/public/upazilas.json';
 
 const CreateDonationRequest = () => {
-          // State for form fields
+    // State for form fields
     const [requesterName, setRequesterName] = useState(""); 
     const [requesterEmail, setRequesterEmail] = useState("");
     const [recipientName, setRecipientName] = useState("");
-    const [recipientDistrict, setRecipientDistrict] = useState("");
-    const [recipientUpazila, setRecipientUpazila] = useState("");
+    const [recipientDistrict, setRecipientDistrict] = useState('');
+    const [recipientUpazila, setRecipientUpazila] = useState('');
     const [hospitalName, setHospitalName] = useState("");
     const [address, setAddress] = useState("");
     const [bloodGroup, setBloodGroup] = useState("");
@@ -19,23 +20,15 @@ const CreateDonationRequest = () => {
     const [donationTime, setDonationTime] = useState("");
     const [requestMessage, setRequestMessage] = useState("");
     const [status] = useState("pending"); 
-    const axiosPublic=useAxiosPublic();
-    const {user}=useAuth();
-    const navigate=useNavigate();
+    const axiosPublic = useAxiosPublic();
+    const { user } = useAuth();
+    const navigate = useNavigate();
 
-    const [districts, setDistricts] = useState([]); 
-    const [upazilas, setUpazilas] = useState([]);
-
- 
     useEffect(() => {
-        // Assuming you're fetching district and upazila data from an API or have predefined options
-        setDistricts(["Dhaka", "Chittagong", "Khulna"]);
-        setUpazilas(["Gulshan", "Bashundhara", "Mirpur"]);
-        
         // Simulate fetching logged-in user data for requesterName and requesterEmail
         const fetchUserData = async () => {
             try {
-                const response = await axiosPublic.get("/users"); 
+                const response = await axiosPublic.get("/users");
                 setRequesterName(response.data.name);
                 setRequesterEmail(response.data.email);
             } catch (error) {
@@ -44,11 +37,10 @@ const CreateDonationRequest = () => {
         };
 
         fetchUserData();
-    }, []);
+    }, [axiosPublic]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-       const userEmail=user.email
         const donationRequest = {
             requesterName,
             requesterEmail,
@@ -62,36 +54,30 @@ const CreateDonationRequest = () => {
             donationTime,
             requestMessage,
             status,
-            userEmail
-            
+            userEmail: user.email
         };
-    
+
         try {
             const response = await axiosPublic.post("/donation-requests", donationRequest);
             console.log("Donation request created successfully:", response.data);
-            // Handle success (e.g., show a success message or redirect)
-            if(response.data.insertedId){
+            if (response.data.insertedId) {
                 Swal.fire({
                     position: "top-end",
                     icon: "success",
                     title: "Donation request created successfully",
                     showConfirmButton: false,
                     timer: 1500
-                  });
-                  navigate("/dashboard/my-donation-requests")
+                });
+                navigate("/dashboard/my-donation-requests");
             }
         } catch (error) {
             console.error("Error creating donation request:", error);
         }
     };
-    
-
 
     return (
-        <>
-            <div>
+        <div>
             <h2 className="text-2xl mb-4 font-semibold text-center">Create Donation Request</h2>
-            
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="requesterName" className="block">Requester Name</label>
@@ -129,15 +115,14 @@ const CreateDonationRequest = () => {
                 <div className="mb-4">
                     <label htmlFor="recipientDistrict" className="block">Recipient District</label>
                     <select
-                        id="recipientDistrict"
+                        className="input input-bordered mt-4"
                         value={recipientDistrict}
                         onChange={(e) => setRecipientDistrict(e.target.value)}
-                        className="p-2 border rounded w-full"
                     >
                         <option value="">Select District</option>
                         {districts.map((district) => (
-                            <option key={district} value={district}>
-                                {district}
+                            <option key={district.id} value={district.name}>
+                                {district.name}
                             </option>
                         ))}
                     </select>
@@ -153,8 +138,8 @@ const CreateDonationRequest = () => {
                     >
                         <option value="">Select Upazila</option>
                         {upazilas.map((upazila) => (
-                            <option key={upazila} value={upazila}>
-                                {upazila}
+                            <option key={upazila.id} value={upazila.name}>
+                                {upazila.name}
                             </option>
                         ))}
                     </select>
@@ -244,8 +229,6 @@ const CreateDonationRequest = () => {
                 </button>
             </form>
         </div>
-       
-        </>
     );
 };
 

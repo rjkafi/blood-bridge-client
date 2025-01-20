@@ -1,63 +1,147 @@
 import { useEffect, useState } from "react";
-import { useNavigate, Outlet } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 
-const ContentManagement = () => {
+const ContentManagement = ({ role }) => {
     const [blogs, setBlogs] = useState([]);
     const [filter, setFilter] = useState('all');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const blogsPerPage = 5;
     const navigate = useNavigate();
-  
+    const axiosSecure = useAxiosSecure();
+
     useEffect(() => {
-      const fetchBlogs = async () => {
-        const response = await fetch(`/blogs?filter=${filter}`);
-        const data = await response.json();
-        setBlogs(data.data);
-      };
-      fetchBlogs();
-    }, [filter]);
-  
+        const fetchBlogs = async () => {
+            try {
+                const res = await axiosSecure.get('/blogs', {
+                    params: { page: currentPage, filter }
+                });
+                setBlogs(res.data.data);
+                setTotalPages(res.data.totalPages);
+            } catch (error) {
+                console.error('Error fetching blogs:', error);
+            }
+        };
+        fetchBlogs();
+    }, [currentPage, filter, axiosSecure]);
+
     const handlePublish = async (id) => {
-      await fetch(`/blogs/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify({ status: 'published' }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      setBlogs(blogs.map(blog => blog._id === id ? { ...blog, status: 'published' } : blog));
+        try {
+            await axiosSecure.put(`/blogs/${id}`, { status: 'published' });
+            setBlogs(prevBlogs =>
+                prevBlogs.map(blog => blog._id === id ? { ...blog, status: 'published' } : blog)
+            );
+        } catch (error) {
+            console.error('Error publishing blog:', error);
+        }
     };
-  
+
+    const handleUnpublish = async (id) => {
+        try {
+            await axiosSecure.put(`/blogs/${id}`, { status: 'draft' });
+            setBlogs(prevBlogs =>
+                prevBlogs.map(blog => blog._id === id ? { ...blog, status: 'draft' } : blog)
+            );
+        } catch (error) {
+            console.error('Error unpublishing blog:', error);
+        }
+    };
+
     const handleDelete = async (id) => {
-      await fetch(`/blogs/${id}`, {
-        method: 'DELETE',
-      });
-      setBlogs(blogs.filter(blog => blog._id !== id));
+        try {
+            await axiosSecure.delete(`/blogs/${id}`);
+            setBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== id));
+        } catch (error) {
+            console.error('Error deleting blog:', error);
+        }
     };
-  
+
     return (
-      <div>
-        <div className="flex justify-between items-center">
-          <select onChange={(e) => setFilter(e.target.value)}>
-            <option value="all">All</option>
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
-          </select>
-          <button className="bg-blue-300 text-white btn" onClick={() => navigate('/dashboard/content-management/add-blog')}>
-            Add Blog
-          </button>
-        </div>
         <div>
-          {blogs.map(blog => (
-            <div key={blog._id}>
-              <h3>{blog.title}</h3>
-              <p>Status: {blog.status}</p>
-              {blog.status === 'draft' && <button onClick={() => handlePublish(blog._id)}>Publish</button>}
-              {blog.status === 'published' && <button onClick={() => handleUnpublish(blog._id)}>Unpublish</button>}
-              <button onClick={() => handleDelete(blog._id)}>Delete</button>
+            <div className="flex justify-between items-center mb-4">
+                <select
+                    className="rounded-md p-2"
+                    onChange={(e) => setFilter(e.target.value)}
+                    value={filter}
+                >
+                    <option value="all">All</option>
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                </select>
+                <button
+                    className="bg-blue-300 text-white btn"
+                    onClick={() => navigate('/dashboard/add-blog')}
+                >
+                    Add Blog
+                </button>
             </div>
-          ))}
+
+            <table className="w-full table-auto">
+                <thead>
+                    <tr>
+                        <th className="px-4 py-2 border-b">Title</th>
+                        <th className="px-4 py-2 border-b">Status</th>
+                        <th className="px-4 py-2 border-b">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {blogs.map(blog => (
+                        <tr key={blog._id}>
+                            <td className="px-4 py-2 border-b">{blog.title}</td>
+                            <td className="px-4 py-2 border-b">{blog.status}</td>
+                            <td className="px-4 py-2 border-b">
+                                {role === 'Admin' && blog.status === 'draft' && (
+                                    <button
+                                        className="bg-green-500 text-white btn mr-2"
+                                        onClick={() => handlePublish(blog._id)}
+                                    >
+                                        Publish
+                                    </button>
+                                )}
+                                {role == 'Admin' && blog.status === 'published' && (
+                                    <button
+                                        className="bg-yellow-500 text-white btn mr-2"
+                                        onClick={() => handleUnpublish(blog._id)}
+                                    >
+                                        Unpublish
+                                    </button>
+                                )}
+                                {role == 'Admin' && (
+                                    <button
+                                        className="bg-red-500 text-white btn mr-2"
+                                        onClick={() => handleDelete(blog._id)}
+                                    >
+                                        Delete
+                                    </button>
+                                )}
+                              
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+
+            {totalPages > 1 && (
+                <div className="pagination mt-4 flex justify-center">
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                        className="btn bg-blue-300 text-white mr-2"
+                    >
+                        Previous
+                    </button>
+                    <span className="mx-2">Page {currentPage} of {totalPages}</span>
+                    <button
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                        className="btn bg-blue-300 text-white ml-2"
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
-        <Outlet />
-      </div>
     );
 };
 

@@ -72,10 +72,6 @@ const AllBloodDonationRequests = () => {
         refetch(); // Refetch data with the new page number
     };
 
-    const handleView = (id) => {
-        // Navigate to a detailed view or open a modal with the details
-        console.log(`View request ID: ${id}`);
-    };
     const handleEdit = (id) => {
         // Logic to show edit form/modal or navigate to an edit page
         console.log(`Edit request ID: ${id}`);
