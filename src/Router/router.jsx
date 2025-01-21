@@ -18,6 +18,10 @@ import EditDonationRequest from "../Shared/EditDonationRequest";
 import DonationRequestDetails from "../Shared/DonationRequestDetails";
 import Search from "../pages/Search/Search";
 import DonationRequests from "../pages/DonationRequests/DonationRequests";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import Blog from "../pages/Blog/Blog";
+import BlogDetails from "../pages/Blog/BlogDetails";
+
 
 
 
@@ -43,9 +47,16 @@ const router = createBrowserRouter([
        },{
         path:"donation-requests",
         element:<DonationRequests></DonationRequests>
-       },,{
+       },{
         path:'donation-request-details/:id',
         element:<DonationRequestDetails></DonationRequestDetails>
+      },{
+        path:'blogs',
+        element:<Blog></Blog>
+      },{
+        path:'blogs/:id',
+        element:<BlogDetails></BlogDetails>,
+        loader:({params})=>fetch(`http://localhost:5000/blogs/${params.id}`)
       }
 
       ]
@@ -72,7 +83,7 @@ const router = createBrowserRouter([
           element:<AllBloodDonationRequests></AllBloodDonationRequests>
         },{
           path:'content-management',
-          element:<ContentManagement role={'Volunteer'}></ContentManagement>,
+          element:<ContentManagement role={'Admin'}></ContentManagement>,
         },
         {
           path:'add-blog',
@@ -94,7 +105,10 @@ const router = createBrowserRouter([
           element:<EditDonationRequest></EditDonationRequest>,
         }
       ]
-    }
+    },{
+      path:'*',
+      element:<ErrorPage></ErrorPage>
+  }
   ]);
 
 export default router;

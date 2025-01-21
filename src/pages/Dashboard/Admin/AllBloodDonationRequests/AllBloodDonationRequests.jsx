@@ -17,7 +17,7 @@ const AllBloodDonationRequests = () => {
                 total: response.data.total,
             };
         },
-        keepPreviousData: true, // Keep previous data while fetching new data
+        keepPreviousData: true, 
     });
 
     const columns = [
@@ -115,7 +115,7 @@ const AllBloodDonationRequests = () => {
                         dataSource={users.data}
                         rowKey="_id"
                         pagination={false}
-                        scroll={{ x: 'max-content' }} // Makes the table horizontally scrollable
+                        scroll={{ x: 'max-content' }} 
                     />
                     <Pagination
                         current={currentPage}

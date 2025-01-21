@@ -19,27 +19,30 @@ const AddBlog = () => {
   const onSubmit = async (data) => {
     try {
       // Prepare image file for upload
-      const imageFile={image: data.image[0]};
-
+      const imageFile = { image: data.image[0] };
+  
       // Image upload to imgbb
       const res = await axiosPublic.post(image_hosting_api, imageFile, {
         headers: {
           "content-type": "multipart/form-data",
         },
       });
-
+  
       if (res.data.success) {
-        // Create blog data with image URL
+        // Convert the JoditEditor content to plain text (removes HTML tags)
+        const plainContent = new DOMParser().parseFromString(content, 'text/html').body.textContent || "";
+  
+        // Create blog data with image URL and plain text content
         const blogData = {
           title: data.title,
           image: res.data.data.display_url,
-          content,
+          content: plainContent, 
         };
-
+  
         // Post blog data to the server
         const blogRes = await axiosSecure.post('/blogs', blogData);
         if (blogRes.data.insertedId) {
-          // Show success popup
+          // Showing success popup
           Swal.fire({
             position: "top-end",
             icon: "success",
@@ -55,6 +58,7 @@ const AddBlog = () => {
       console.error("Error submitting the form:", error);
     }
   };
+  
 
   return (
     <div className="my-6">

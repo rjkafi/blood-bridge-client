@@ -2,7 +2,7 @@ import { NavLink, Outlet } from "react-router-dom";
 
 const Dashboard = () => {
     // Simulate role; in a real scenario, fetch this from the user's context or state
-    const userRole = "Donor"; // or "Admin" / "Donor" based on the user's role
+    const userRole = "Admin"; // or "Admin" / "Donor" based on the user's role
 
     return (
         <>
