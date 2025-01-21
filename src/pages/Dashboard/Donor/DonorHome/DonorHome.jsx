@@ -1,56 +1,78 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import Swal from 'sweetalert2'; 
 
 import useAxiosPublic from '../../../../hooks/useAxiosPublic';
 import useAuth from '../../../../hooks/useAuth';
 
-
 const DonorHome = () => {
-    
     const navigate = useNavigate();
     const axiosPublic = useAxiosPublic();
-    const {user}=useAuth();
+    const { user } = useAuth();
+    // console.log(user);
 
-    // Fetch donation requests using Tanstack Query
     const { data: donationRequests = [], isLoading, refetch } = useQuery({
-        queryKey: ['donationRequests'], // Pass the user email to the query key
+        queryKey: ['donationRequests'],
         queryFn: async () => {
             const response = await axiosPublic.get('/donation-requests/recent');
-              console.log(response.data);  // Check the response here
-              return response.data;  // Ensure you're getting the correct data from the response
+            return response.data;
         },
     });
-    
 
-    // Mutation hooks for handling the update and delete actions
-    const updateDonationStatus =async ({ id, status }) => {
-            const response = await axiosSecure.put(`/donation-requests/${id}`, { status });
-            return response.data; 
-            
+    const updateDonationStatus = async (id, status) => {
+        try {
+            const response = await axiosPublic.put(`/donation-requests/${id}`, { status });
+            console.log(`Status updated to ${status}:`, response.data);
+        } catch (error) {
+            console.error('Error updating status:', error);
         }
-        
-        
-
-    const handleDone = (id) => {
-        updateDonationStatus.mutate({ id, status: 'done' });
     };
 
-    const handleCancel = (id) => {
-        updateDonationStatus.mutate({ id, status: 'canceled' });
+    const handleDone = async (id) => {
+        await updateDonationStatus(id, 'done');
+        refetch(); // Refetch data after updating status
+    };
+
+    const handleCancel = async (id) => {
+        await updateDonationStatus(id, 'canceled');
+        refetch(); // Refetch data after updating status
     };
 
     const handleEdit = (id) => {
-        // Redirect to the edit page with the donation request ID
-        navigate(`/dashboard/edit-donation-request/${id}`)
+        navigate(`/dashboard/edit-donation-request/${id}`);
     };
 
     const deleteDonationRequest = async (id) => {
-         await axiosSecure.delete(`/donation-requests/${id}`);
-         refetch();
+        try {
+            await axiosPublic.delete(`/donation-requests/${id}`);
+            refetch(); // Refetch data after deleting request
+        } catch (error) {
+            console.error('Error deleting request:', error);
         }
+    };
 
-  
+    const handleDelete = (id) => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You want to delete this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                deleteDonationRequest(id).then(() => {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your donation request has been deleted.',
+                        'success'
+                    );
+                });
+            }
+        });
+    };
 
     if (isLoading) {
         return <p>Loading...</p>;
@@ -58,13 +80,14 @@ const DonorHome = () => {
 
     return (
         <div>
-            <h2 className="text-2xl mb-4">Welcome,{user.displayName}!</h2>
+            <h2 className="text-2xl mb-4">Welcome, {user.displayName}!</h2>
+            
 
             {donationRequests.length > 0 ? (
                 <div>
                     <h3 className="text-xl mb-4">Your Recent Donation Requests</h3>
                     <div className="overflow-x-auto">
-                        <table className="table">
+                        <table className="table-auto w-full">
                             <thead>
                                 <tr>
                                     <th>Recipient Name</th>
@@ -86,29 +109,23 @@ const DonorHome = () => {
                                         <td className="flex space-x-2">
                                             {request.status === 'inprogress' && (
                                                 <>
-                                                    <button className="btn btn-success" onClick={() => handleDone(request.id)}>
+                                                    <button className="btn btn-success" onClick={() => handleDone(request._id)}>
                                                         Done
                                                     </button>
-                                                    <button className="btn btn-danger" onClick={() => handleCancel(request.id)}>
+                                                    <button className="btn btn-danger" onClick={() => handleCancel(request._id)}>
                                                         Cancel
                                                     </button>
                                                 </>
                                             )}
-                                           <button
-                                            className="btn btn-primary"
-                                            onClick={() => handleEdit(request._id)} // 
-                                        >
-                                            Edit
-                                        </button>
-                                            <button className="btn bg-red-400 text-white" onClick={() => deleteDonationRequest(request._id)}>
+                                            <button className="btn btn-primary" onClick={() => handleEdit(request._id)}>
+                                                Edit
+                                            </button>
+                                            <button className="btn bg-red-400 text-white" onClick={() => handleDelete(request._id)}>
                                                 Delete
                                             </button>
-                                            <button
-                                            className="btn btn-info text-white"
-                                            onClick={() => navigate(`/dashboard/donation-request-details/${request._id}`)}
-                                        >
-                                            View
-                                        </button>
+                                            <button className="btn btn-info text-white" onClick={() => navigate(`/donation-request-details/${request._id}`)}>
+                                                View
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}

@@ -18,16 +18,16 @@ const MyDonationRequests = () => {
         const fetchDonationRequests = async () => {
             if (!user) return;
 
-            // console.log("User Info:", user); 
-
             setIsLoading(true);
             setError(null);
 
             try {
                 const response = await axiosPublic.get('/donation-requests',
-                    { email: user.email }, { filter: statusFilter }
-                );
-                console.log("API Response:", response.data); 
+                    
+                        {email: user.email},
+                       { filter: statusFilter},
+                   
+               );
                 setDonationRequests(response.data.data || []);
             } catch (error) {
                 console.error("Error fetching donation requests:", error);
@@ -43,12 +43,11 @@ const MyDonationRequests = () => {
     const filterByStatus = (status) => {
         setStatusFilter(status);
     };
-    // Handle Edit Button
+
     const handleEdit = (id) => {
-        // Redirect to the edit page with the donation request ID
-        navigate(`/dashboard/edit-donation-request/${id}`)
+        navigate(`/dashboard/edit-donation-request/${id}`);
     };
-    // Handle Delete Button
+
     const handleDelete = (id) => {
         Swal.fire({
             title: "Are you sure?",
@@ -61,21 +60,12 @@ const MyDonationRequests = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    console.log("Deleting donation request with ID:", id);
                     await axiosPublic.delete(`/donation-requests/${id}`);
                     setDonationRequests(prevRequests => prevRequests.filter(request => request._id !== id));
-                    Swal.fire({
-                        title: "Deleted!",
-                        text: "Your request has been deleted.",
-                        icon: "success"
-                    });
+                    Swal.fire("Deleted!", "Your request has been deleted.", "success");
                 } catch (error) {
                     console.error('Error deleting request:', error);
-                    Swal.fire({
-                        title: "Error!",
-                        text: "There was an issue deleting your request.",
-                        icon: "error"
-                    });
+                    Swal.fire("Error!", "There was an issue deleting your request.", "error");
                 }
             }
         });
@@ -131,24 +121,9 @@ const MyDonationRequests = () => {
                                     <td>{request.bloodGroup}</td>
                                     <td>{request.status}</td>
                                     <td className="flex space-x-2">
-                                        <button
-                                            className="btn btn-primary"
-                                            onClick={() => handleEdit(request._id)} 
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="btn bg-red-400 text-white"
-                                            onClick={() => handleDelete(request._id)}
-                                        >
-                                            Delete
-                                        </button>
-                                        <button
-                                            className="btn btn-info text-white"
-                                            onClick={() => navigate(`/donation-request-details/${request._id}`)} 
-                                        >
-                                            View
-                                        </button>
+                                        <button className="btn btn-primary" onClick={() => handleEdit(request._id)}>Edit</button>
+                                        <button className="btn bg-red-400 text-white" onClick={() => handleDelete(request._id)}>Delete</button>
+                                        <button className="btn btn-info text-white" onClick={() => navigate(`/donation-request-details/${request._id}`)}>View</button>
                                     </td>
                                 </tr>
                             ))}

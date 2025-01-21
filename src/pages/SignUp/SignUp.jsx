@@ -63,6 +63,7 @@ const SignUp = () => {
         createUser(data.email, data.password)
             .then(result => {
                 const loggedUser = result.user;
+                console.log(loggedUser.data)
                 updateUserProfile(data.name, data.photoURL)
                     .then(async () => {
                         // Prepare image file for upload

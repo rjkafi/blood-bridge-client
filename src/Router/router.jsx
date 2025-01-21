@@ -83,7 +83,7 @@ const router = createBrowserRouter([
           element:<AllBloodDonationRequests></AllBloodDonationRequests>
         },{
           path:'content-management',
-          element:<ContentManagement role={'Admin'}></ContentManagement>,
+          element:<ContentManagement ></ContentManagement>,
         },
         {
           path:'add-blog',

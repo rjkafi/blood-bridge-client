@@ -2,11 +2,14 @@ import React, { useState } from 'react';
 import { Table, Button, Select, Spin, Alert, Pagination } from 'antd'; 
 import useAxiosSecure from '../../../../hooks/useAxiosSecure';
 import { useQuery } from '@tanstack/react-query';
+import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 const AllBloodDonationRequests = () => {
     const [filter, setFilter] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const axiosSecure = useAxiosSecure();
+    const navigate=useNavigate();
 
     const { data: users = { data: [], total: 0 }, isLoading, error, refetch } = useQuery({
         queryKey: ['users', currentPage, filter],
@@ -51,7 +54,7 @@ const AllBloodDonationRequests = () => {
             key: 'actions',
             render: (text, record) => (
                 <div className=' flex space-x-2'>
-                    <Button type="primary" onClick={() => handleView(record._id)}>View</Button>
+                    <Button type="primary" onClick={() => navigate(`/donation-request-details/${record._id}`)}>View</Button>
                     <Button onClick={() => handleEdit(record._id)}>Edit</Button>
                     <Button danger onClick={() => handleDelete(record._id)}>Delete</Button>
 
@@ -72,19 +75,32 @@ const AllBloodDonationRequests = () => {
         refetch(); // Refetch data with the new page number
     };
 
-    const handleEdit = (id) => {
-        // Logic to show edit form/modal or navigate to an edit page
-        console.log(`Edit request ID: ${id}`);
-    };
-    const handleDelete = async (id) => {
-        try {
-            await axiosSecure.delete(`/donation-requests/${id}`);
-            refetch(); // Refetch the data to update the table
-            console.log(`Deleted request ID: ${id}`);
-        } catch (error) {
-            console.error('Error deleting the request:', error);
-        }
-    };
+ const handleEdit = (id) => {
+         navigate(`/dashboard/edit-donation-request/${id}`);
+     };
+ 
+     const handleDelete = (id) => {
+         Swal.fire({
+             title: "Are you sure?",
+             text: "You won't be able to revert this!",
+             icon: "warning",
+             showCancelButton: true,
+             confirmButtonColor: "#3085d6",
+             cancelButtonColor: "#d33",
+             confirmButtonText: "Yes, delete it!"
+         }).then(async (result) => {
+             if (result.isConfirmed) {
+                 try {
+                     await axiosPublic.delete(`/donation-requests/${id}`);
+                     setDonationRequests(prevRequests => prevRequests.filter(request => request._id !== id));
+                     Swal.fire("Deleted!", "Your request has been deleted.", "success");
+                 } catch (error) {
+                     console.error('Error deleting request:', error);
+                     Swal.fire("Error!", "There was an issue deleting your request.", "error");
+                 }
+             }
+         });
+     };
     
     
 

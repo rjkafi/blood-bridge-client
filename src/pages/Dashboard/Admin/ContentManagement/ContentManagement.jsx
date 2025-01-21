@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import Swal from "sweetalert2";
 
 const ContentManagement = ({ role }) => {
     const [blogs, setBlogs] = useState([]);
@@ -49,11 +50,25 @@ const ContentManagement = ({ role }) => {
     };
 
     const handleDelete = async (id) => {
-        try {
-            await axiosSecure.delete(`/blogs/${id}`);
-            setBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== id));
-        } catch (error) {
-            console.error('Error deleting blog:', error);
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
+    
+        if (result.isConfirmed) {
+            try {
+                await axiosSecure.delete(`/blogs/${id}`);
+                setBlogs(prevBlogs => prevBlogs.filter(blog => blog._id !== id));
+                Swal.fire('Deleted!', 'Your blog has been deleted.', 'success');
+            } catch (error) {
+                console.error('Error deleting blog:', error);
+                Swal.fire('Error!', 'There was an error deleting the blog.', 'error');
+            }
         }
     };
 
