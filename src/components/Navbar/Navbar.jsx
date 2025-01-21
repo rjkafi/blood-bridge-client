@@ -40,12 +40,12 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
+            className="menu menu-sm dropdown-content bg-blue-300 text-black rounded-box z-[1] mt-3 w-52 p-2 shadow"
           >
             {navOptions}
           </ul>
         </div>
-        <a className="btn btn-ghost text-xl">Blood-Bridge</a>
+        <img className="h-16 w-24" src="https://i.ibb.co.com/h1zKYzZ/1-removebg-preview.png" alt="" />
       </div>
 
       <div className="navbar-center hidden lg:flex">

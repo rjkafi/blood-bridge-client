@@ -1,10 +1,10 @@
 const Footer = () => {
     return (
-        <footer className="bg-gray-800 text-white py-8">
+        <footer className="bg-slate-700 text-white py-8 px-4">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Logo and Description */}
                 <div className="flex flex-col items-center md:items-start">
-                    <img src="/path-to-logo/logo.png" alt="Blood Bridge Logo" className="h-12 mb-4" />
+                    <img src="https://i.ibb.co.com/h1zKYzZ/1-removebg-preview.png" alt="Blood Bridge Logo" className="h-12 mb-4" />
                     <p className="text-center md:text-left text-sm">Connecting donors with those in need. Your blood donation can save lives. Join us today!</p>
                 </div>
 
