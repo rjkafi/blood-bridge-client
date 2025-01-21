@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 import { FaHospitalUser, FaMapMarkerAlt, FaHospital, FaCalendarAlt, FaTint, FaInfoCircle, FaCommentDots } from "react-icons/fa";
 import useAuth from "../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const DonationRequestDetails = () => {
   const { id } = useParams();
@@ -32,12 +33,25 @@ const DonationRequestDetails = () => {
   const handleDonate = async () => {
     try {
       const response = await axiosPublic.patch(`/blood-requests/${id}`, { status: "inprogress" });
-      alert("Donation status updated to inprogress!");
+      
+      Swal.fire({
+        title: 'Success!',
+        text: 'Donation status updated to in progress!',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+  
       setShowModal(false);
       setDonationRequest((prev) => ({ ...prev, status: "inprogress" }));
     } catch (error) {
       console.error("Error updating donation status:", error);
-      alert("Failed to update donation status.");
+  
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to update donation status.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
   };
 
