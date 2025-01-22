@@ -1,5 +1,5 @@
-import districts from '/public/districts.json';
-import upazilas from '/public/upazilas.json';
+import districts from '../../json/districts.json';
+import upazilas from '../../json/upazilas.json';
 
 import { useState } from "react";
 import { Helmet } from "react-helmet-async";

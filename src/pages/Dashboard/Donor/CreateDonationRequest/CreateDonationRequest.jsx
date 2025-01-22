@@ -3,8 +3,8 @@ import useAxiosPublic from "../../../../hooks/useAxiosPublic";
 import Swal from "sweetalert2";
 import useAuth from "../../../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
-import districts from '/public/districts.json';
-import upazilas from '/public/upazilas.json';
+import districts from '../../../../json/districts.json';
+import upazilas from '../../../../json/upazilas.json';
 
 const CreateDonationRequest = () => {
     // State for form fields
