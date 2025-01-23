@@ -102,7 +102,7 @@ const MyDonationRequests = () => {
                     <table className="table table-xs">
                         <thead>
                             <tr>
-                                <th>#</th>
+                                <th></th>
                                 <th>Recipient Name</th>
                                 <th>Location</th>
                                 <th>Donation Date</th>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import { useParams } from 'react-router-dom';
+import { MdPublishedWithChanges } from 'react-icons/md';
 
 const BlogDetails = () => {
     const { id } = useParams();
@@ -35,7 +36,8 @@ const BlogDetails = () => {
   return (
     <div className="py-20">
       <div className="max-w-4xl mx-auto p-6 bg-white">
-      <p className="text-gray-500">
+      <p className="text-gray-500 flex items-center">
+         <MdPublishedWithChanges className='mr-2'></MdPublishedWithChanges>
           Published on: {new Date(blog.createdAt).toLocaleDateString('en-US', {
             year: 'numeric',
             month: 'short',

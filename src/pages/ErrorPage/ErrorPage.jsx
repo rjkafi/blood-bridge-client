@@ -1,6 +1,5 @@
 
-
-import Lottie from "lottie-react";
+import Lottie from 'lottie-react';
 import animationData from '../../lottie/error.json';
 import { Helmet } from 'react-helmet-async';
 
@@ -18,7 +17,7 @@ const ErrorPage = () => {
         <>
         <div>
             <Helmet>
-                <title>Error page || Marathon-x</title>
+                <title>Error page || Blood Bridge</title>
             </Helmet>
         </div>
         <div className='py-20'>

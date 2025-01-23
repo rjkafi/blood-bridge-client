@@ -21,6 +21,8 @@ import DonationRequests from "../pages/DonationRequests/DonationRequests";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Blog from "../pages/Blog/Blog";
 import BlogDetails from "../pages/Blog/BlogDetails";
+import AdminHome from "../pages/Dashboard/Admin/AdminHome/AdminHome";
+import AdminRoute from "./AdminRoute";
 
 
 
@@ -75,6 +77,10 @@ const router = createBrowserRouter([
           element:<CreateDonationRequest></CreateDonationRequest>
         },
         // Admin routes
+        {
+         path:'adminHome',
+         element:<AdminRoute><AdminHome></AdminHome></AdminRoute>
+        },
         {
           path:'all-users',
           element:<AllUsers></AllUsers>

@@ -1,25 +1,22 @@
 import React, { useState } from 'react';
 import { useQuery } from "@tanstack/react-query";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
-import { Table, Button, Dropdown, Menu, Pagination } from "antd";
+import { Table, Button, Dropdown, Menu } from "antd";
 import { FaUsers } from "react-icons/fa";
 
 const AllUsers = () => {
     const axiosSecure = useAxiosSecure();
-    const [currentPage, setCurrentPage] = useState(1);
     const [filter, setFilter] = useState('all');
-    const pageSize = 10; 
 
-    const { data: users = { data: [], total: 0 }, refetch } = useQuery({
-        queryKey: ["users", currentPage, filter],
+    const { data: users = { data: [] }, refetch } = useQuery({
+        queryKey: ["users", filter],
         queryFn: async () => {
-          const res = await axiosSecure.get(`/users?page=${currentPage}&filter=${filter}`);
+          const res = await axiosSecure.get(`/users?filter=${filter}`);
           return {
             data: res.data.data,
-            total: res.data.total,
           };
         },
-        keepPreviousData: true, // Retain previous data while fetching new data
+        keepPreviousData: true,
     });
 
     const handleBlockUnblock = async (userId, status) => {
@@ -28,8 +25,15 @@ const AllUsers = () => {
     };
 
     const handleRoleChange = async (userId, role) => {
-        await axiosSecure.put(`/users/${userId}/role`, { role });
-        refetch(); // Refetch data after role change
+        await axiosSecure.patch(`/users/${userId}/role`, { role })
+        .then(res => {
+            if (res.data.modifiedCount > 0) {
+                refetch(); // Refetch data after role change
+            }
+        })
+        .catch(error => {
+            console.log(error);
+        });
     };
 
     const columns = [
@@ -81,7 +85,7 @@ const AllUsers = () => {
             <div className="flex justify-between mb-4">
                 <div className="flex gap-x-2 items-center">
                     <FaUsers className="text-2xl" />
-                    <h2 className="text-2xl">Total Users: {users.total}</h2>
+                    <h2 className="text-2xl">Total Users: {users.data.length}</h2>
                 </div>
                 <div>
                     <select
@@ -99,18 +103,10 @@ const AllUsers = () => {
                 <Table 
                     dataSource={users.data} 
                     columns={columns} 
-                    pagination={false} 
+                    pagination={false} // No pagination
                     rowKey="_id" 
-                    scroll={{ x: "max-content", y: false }}  // Enable horizontal scroll, disable vertical scroll
+                    scroll={{ x: "max-content" }} // Enable horizontal scroll
                 />
-                <div className="flex justify-center mt-4">
-                    <Pagination 
-                        current={currentPage} 
-                        total={users.total} 
-                        pageSize={pageSize} 
-                        onChange={(page) => setCurrentPage(page)} 
-                    />
-                </div>
             </div>
         </div>
     );

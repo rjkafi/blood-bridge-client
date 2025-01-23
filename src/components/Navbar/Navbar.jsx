@@ -1,10 +1,12 @@
 import { Link, NavLink } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { TbLogout } from "react-icons/tb";
+import useAdmin from "../../hooks/useAdmin";
 
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
+  const [isAdmin]=useAdmin();
 
   const navOptions = <>
     <li><Link to='/'>Home</Link></li>
@@ -71,8 +73,12 @@ const Navbar = () => {
                 className="dropdown-content menu p-6 shadow bg-base-100 rounded-box w-52"
               >
                 <div className="space-y-3">
-                <li><Link className="bg-blue-400 text-white text-lg font-semibold" to="/dashboard">Dashboard</Link>
-                </li>
+                {
+                  user && isAdmin && <li><Link className="bg-blue-400 text-white text-lg font-semibold" to="/dashboard/adminHome">Dashboard</Link></li>
+                }
+                {
+                 user &&  !isAdmin &&<li><Link className="bg-blue-400 text-white text-lg font-semibold" to="/dashboard/donorHome">Dashboard</Link></li>
+                }
                 <li>
                 
                   <button
@@ -88,12 +94,10 @@ const Navbar = () => {
           </div>
         ) : (
           // User is not logged in
-          <div >
+          <div className=" btn bg-gradient-to-r  font-semibold text-white from-teal-400 to-blue-500" >
             <NavLink
               to="/login"
-              className={({ isActive }) =>
-                `btn join-item ${isActive ? "bg-orange-500 text-white" : "bg-gray-400"}`
-              }
+              className=''
             >
               Login
             </NavLink>

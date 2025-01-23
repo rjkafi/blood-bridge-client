@@ -1,9 +1,49 @@
 import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { Link, NavLink, Outlet } from "react-router-dom";
+import useAdmin from "../hooks/useAdmin";
+import useAuth from "../hooks/useAuth";
 
 const Dashboard = () => {
-    // Simulate role; in a real scenario, fetch this from the user's context or state
-    const userRole = "Donor"; // or "Admin" / "Donor" based on the user's role
+    const { user} = useAuth();
+    const [isAdmin]=useAdmin();
+    
+
+  
+
+    // Conditional rendering based on role
+    const renderNavLinks = () => {
+        if (isAdmin) {
+            return (
+                <>
+                    <li><NavLink to="/dashboard/all-users" activeClassName="text-white bg-blue-500">All Users</NavLink></li>
+                    <li><NavLink to="/dashboard/all-blood-donation-request" activeClassName="text-white bg-blue-500">All Blood Donation Requests</NavLink></li>
+                    <li><NavLink to="/dashboard/content-management" activeClassName="text-white bg-blue-500">Content Management</NavLink></li>
+                </>
+            );
+        }
+
+        if (user?.role === "Donor") {
+            return (
+                <>
+                    <li><NavLink to="/dashboard/donorHome" activeClassName="text-white bg-blue-500">Donor Home</NavLink></li>
+                    <li><NavLink to="/dashboard/my-donation-requests" activeClassName="text-white bg-blue-500">My Donation Requests</NavLink></li>
+                    <li><NavLink to="/dashboard/create-donation-request" activeClassName="text-white bg-blue-500">Create Donation Request</NavLink></li>
+                </>
+            );
+        }
+
+        if (user?.role === "volunteer") {
+            return (
+                <>
+                    <li><NavLink to="/dashboard/volunteer-home" activeClassName="text-white bg-blue-500">Volunteer Home</NavLink></li>
+                    <li><NavLink to="/dashboard/all-blood-donations-request" activeClassName="text-white bg-blue-500">All Blood Donation Requests</NavLink></li>
+                    <li><NavLink to="/dashboard/content-management" activeClassName="text-white bg-blue-500">Manage Donation Requests</NavLink></li>
+                </>
+            );
+        }
+     // If user role is not found
+        return null;  
+    };
 
     return (
         <div className="md:flex min-h-screen">
@@ -15,29 +55,7 @@ const Dashboard = () => {
                 </div>
                 <h2 className="text-white text-center text-2xl font-bold">Dashboard</h2>
                 <ul className="menu text-lg p-2 space-y-2">
-                    {userRole === "Admin" && (
-                        <>
-                            <li><NavLink to="/dashboard/all-users" activeClassName="text-white bg-blue-500">All Users</NavLink></li>
-                            <li><NavLink to="/dashboard/all-blood-donation-request" activeClassName="text-white bg-blue-500">All Blood Donation Requests</NavLink></li>
-                            <li><NavLink to="/dashboard/content-management" activeClassName="text-white bg-blue-500">Content Management</NavLink></li>
-                        </>
-                    )}
-
-                    {userRole === "Donor" && (
-                        <>
-                            <li><NavLink to="/dashboard/donorHome" activeClassName="text-white bg-blue-500">Donor Home</NavLink></li>
-                            <li><NavLink to="/dashboard/my-donation-requests" activeClassName="text-white bg-blue-500">My Donation Requests</NavLink></li>
-                            <li><NavLink to="/dashboard/create-donation-request" activeClassName="text-white bg-blue-500">Create Donation Request</NavLink></li>
-                        </>
-                    )}
-
-                    {userRole === "Volunteer" && (
-                        <>
-                            <li><NavLink to="/dashboard/volunteer-home" activeClassName="text-white bg-blue-500">Volunteer Home</NavLink></li>
-                            <li><NavLink to="/dashboard/all-blood-donations-request" activeClassName="text-white bg-blue-500">All Blood Donation Requests</NavLink></li>
-                            <li><NavLink to="/dashboard/content-management" activeClassName="text-white bg-blue-500">Manage Donation Requests</NavLink></li>
-                        </>
-                    )}
+                    {renderNavLinks()}
                 </ul>
             </div>
             {/* Content area */}

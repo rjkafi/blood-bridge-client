@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import Swal from "sweetalert2";
 
-const ContentManagement = ({ role }) => {
+const ContentManagement = () => {
     const [blogs, setBlogs] = useState([]);
     const [filter, setFilter] = useState('all');
+    const [user, setUser] = useState(null); // Remove the role prop, use user state
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const blogsPerPage = 5;
@@ -26,6 +27,18 @@ const ContentManagement = ({ role }) => {
         };
         fetchBlogs();
     }, [currentPage, filter, axiosSecure]);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const response = await axiosSecure.get("/users"); // Fetch logged-in user data
+                setUser(response.data);
+            } catch (error) {
+                console.error("Error fetching user:", error);
+            }
+        };
+        fetchUser();
+    }, []);
 
     const handlePublish = async (id) => {
         try {
@@ -59,7 +72,7 @@ const ContentManagement = ({ role }) => {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         });
-    
+
         if (result.isConfirmed) {
             try {
                 await axiosSecure.delete(`/blogs/${id}`);
@@ -71,6 +84,10 @@ const ContentManagement = ({ role }) => {
             }
         }
     };
+
+    if (!user) {
+        return <div>Loading...</div>; // Show a loading state while user data is being fetched
+    }
 
     return (
         <div>
@@ -84,12 +101,14 @@ const ContentManagement = ({ role }) => {
                     <option value="draft">Draft</option>
                     <option value="published">Published</option>
                 </select>
-                <button
-                    className="bg-blue-300 text-white btn"
-                    onClick={() => navigate('/dashboard/add-blog')}
-                >
-                    Add Blog
-                </button>
+                {user.role === 'admin' && (
+                    <button
+                        className="bg-blue-300 text-white btn"
+                        onClick={() => navigate('/dashboard/add-blog')}
+                    >
+                        Add Blog
+                    </button>
+                )}
             </div>
 
             <table className="w-full table-auto">
@@ -106,7 +125,7 @@ const ContentManagement = ({ role }) => {
                             <td className="px-4 py-2 border-b">{blog.title}</td>
                             <td className="px-4 py-2 border-b">{blog.status}</td>
                             <td className="px-4 py-2 border-b">
-                                {role === 'Admin' && blog.status === 'draft' && (
+                                {user.role === 'admin' && blog.status === 'draft' && (
                                     <button
                                         className="bg-green-500 text-white btn mr-2"
                                         onClick={() => handlePublish(blog._id)}
@@ -114,7 +133,7 @@ const ContentManagement = ({ role }) => {
                                         Publish
                                     </button>
                                 )}
-                                {role == 'Admin' && blog.status === 'published' && (
+                                {user.role === 'admin' && blog.status === 'published' && (
                                     <button
                                         className="bg-yellow-500 text-white btn mr-2"
                                         onClick={() => handleUnpublish(blog._id)}
@@ -122,7 +141,7 @@ const ContentManagement = ({ role }) => {
                                         Unpublish
                                     </button>
                                 )}
-                                {role == 'Admin' && (
+                                {user.role === 'admin' && (
                                     <button
                                         className="bg-red-500 text-white btn mr-2"
                                         onClick={() => handleDelete(blog._id)}
@@ -130,7 +149,6 @@ const ContentManagement = ({ role }) => {
                                         Delete
                                     </button>
                                 )}
-                              
                             </td>
                         </tr>
                     ))}

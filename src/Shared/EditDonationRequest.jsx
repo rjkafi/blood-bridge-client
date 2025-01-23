@@ -27,7 +27,7 @@ const EditDonationRequest = () => {
         const fetchDonationRequest = async () => {
             try {
                 const response = await axiosPublic.get(`/donation-requests/${id}`);
-                setDonationRequest(response.data);  // Set the fetched data as the default values for the form
+                setDonationRequest(response.data);  
                 setIsLoading(false);
             } catch (error) {
                 console.error("Error fetching donation request:", error);
@@ -35,7 +35,7 @@ const EditDonationRequest = () => {
             }
         };
 
-        // Mock data for districts and upazilas (replace with API calls if needed)
+        // Mock data for districts and upazilas 
         setDistricts(["Dhaka", "Chittagong", "Khulna"]); 
         setUpazilas(["Uttara", "Mirpur", "Bashundhara"]); 
         
@@ -59,7 +59,7 @@ const EditDonationRequest = () => {
                 text: "Your donation request has been updated.",
                 icon: "success",
             });
-            navigate("/dashboard/my-donation-requests");  // Navigate back to the donation requests page
+            navigate("/dashboard/my-donation-requests");  
         } catch (error) {
             console.error("Error updating request:", error);
             Swal.fire({
@@ -84,7 +84,7 @@ const EditDonationRequest = () => {
                         type="text"
                         id="recipientName"
                         name="recipientName"
-                        value={donationRequest.recipientName}  // Default value set to the state
+                        value={donationRequest.recipientName}  
                         onChange={handleChange}
                         className="p-2 border rounded w-full"
                     />
@@ -95,7 +95,7 @@ const EditDonationRequest = () => {
                     <select
                         id="recipientDistrict"
                         name="recipientDistrict"
-                        value={donationRequest.recipientDistrict}  // Default value set to the state
+                        value={donationRequest.recipientDistrict} 
                         onChange={handleChange}
                         className="p-2 border rounded w-full"
                     >
@@ -113,7 +113,7 @@ const EditDonationRequest = () => {
                     <select
                         id="recipientUpazila"
                         name="recipientUpazila"
-                        value={donationRequest.recipientUpazila}  // Default value set to the state
+                        value={donationRequest.recipientUpazila}  
                         onChange={handleChange}
                         className="p-2 border rounded w-full"
                     >
@@ -132,7 +132,7 @@ const EditDonationRequest = () => {
                         type="text"
                         id="hospitalName"
                         name="hospitalName"
-                        value={donationRequest.hospitalName}  // Default value set to the state
+                        value={donationRequest.hospitalName}  
                         onChange={handleChange}
                         className="p-2 border rounded w-full"
                     />
@@ -144,7 +144,7 @@ const EditDonationRequest = () => {
                         type="text"
                         id="address"
                         name="address"
-                        value={donationRequest.address}  // Default value set to the state
+                        value={donationRequest.address}  
                         onChange={handleChange}
                         className="p-2 border rounded w-full"
                     />
@@ -155,7 +155,7 @@ const EditDonationRequest = () => {
                     <select
                         id="bloodGroup"
                         name="bloodGroup"
-                        value={donationRequest.bloodGroup}  // Default value set to the state
+                        value={donationRequest.bloodGroup}  
                         onChange={handleChange}
                         className="p-2 border rounded w-full"
                     >
@@ -177,7 +177,7 @@ const EditDonationRequest = () => {
                         type="date"
                         id="donationDate"
                         name="donationDate"
-                        value={donationRequest.donationDate}  // Default value set to the state
+                        value={donationRequest.donationDate}  
                         onChange={handleChange}
                         className="p-2 border rounded w-full"
                     />
@@ -189,7 +189,7 @@ const EditDonationRequest = () => {
                         type="time"
                         id="donationTime"
                         name="donationTime"
-                        value={donationRequest.donationTime}  // Default value set to the state
+                        value={donationRequest.donationTime}  
                         onChange={handleChange}
                         className="p-2 border rounded w-full"
                     />
@@ -200,7 +200,7 @@ const EditDonationRequest = () => {
                     <textarea
                         id="requestMessage"
                         name="requestMessage"
-                        value={donationRequest.requestMessage}  // Default value set to the state
+                        value={donationRequest.requestMessage}  
                         onChange={handleChange}
                         className="p-2 border rounded w-full"
                         rows="4"

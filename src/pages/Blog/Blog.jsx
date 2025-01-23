@@ -7,9 +7,9 @@ const Blog = () => {
   const [blogs, setBlogs] = useState([]);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1); // Track current page
-  const [totalPages, setTotalPages] = useState(1); // Track total pages
-  const [blogsPerPage] = useState(5); // Number of blogs per page
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1); 
+  const [blogsPerPage] = useState(5); 
   const axiosPublic = useAxiosPublic();
 
   useEffect(() => {
@@ -22,8 +22,8 @@ const Blog = () => {
             limit: blogsPerPage
           }
         });
-        setBlogs(response.data.data); // Assuming response.data.data contains blogs
-        setTotalPages(response.data.totalPages); // Assuming response.data.totalPages contains the total number of pages
+        setBlogs(response.data.data);
+        setTotalPages(response.data.totalPages); 
       } catch (error) {
         console.error('Error fetching blogs:', error);
         setError('Failed to load blogs.');
@@ -33,7 +33,7 @@ const Blog = () => {
     };
 
     fetchBlogs();
-  }, [currentPage, blogsPerPage]); // Re-fetch blogs when currentPage changes
+  }, [currentPage, blogsPerPage]); 
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -86,24 +86,6 @@ const Blog = () => {
         )}
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex justify-center mt-8 space-x-4">
-        <button 
-          onClick={() => handlePageChange(currentPage - 1)} 
-          disabled={currentPage === 1} 
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Previous
-        </button>
-        <span className="self-center text-lg">Page {currentPage} of {totalPages}</span>
-        <button 
-          onClick={() => handlePageChange(currentPage + 1)} 
-          disabled={currentPage === totalPages} 
-          className="px-4 py-2 bg-blue-500 text-white rounded"
-        >
-          Next
-        </button>
-      </div>
     </div>
   );
 };

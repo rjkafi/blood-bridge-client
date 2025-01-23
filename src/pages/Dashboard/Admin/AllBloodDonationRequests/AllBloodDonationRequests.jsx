@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 const AllBloodDonationRequests = () => {
     const [filter, setFilter] = useState('');
+    const [donationRequests, setDonationRequests]=useState([])
     const [currentPage, setCurrentPage] = useState(1);
     const axiosSecure = useAxiosSecure();
     const navigate=useNavigate();
@@ -90,9 +91,11 @@ const AllBloodDonationRequests = () => {
              confirmButtonText: "Yes, delete it!"
          }).then(async (result) => {
              if (result.isConfirmed) {
+                
                  try {
-                     await axiosPublic.delete(`/donation-requests/${id}`);
+                     await axiosSecure.delete(`/donation-requests/${id}`);
                      setDonationRequests(prevRequests => prevRequests.filter(request => request._id !== id));
+                     refetch();
                      Swal.fire("Deleted!", "Your request has been deleted.", "success");
                  } catch (error) {
                      console.error('Error deleting request:', error);
