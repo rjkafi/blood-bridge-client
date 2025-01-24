@@ -97,7 +97,7 @@ const router = createBrowserRouter([
         },
         // Volunteer routes
         {
-          path:'volunteer-home',
+          path:'volunteerHome',
           element:<VolunteerHome></VolunteerHome>
         }, {
           path: 'all-blood-donations-request',

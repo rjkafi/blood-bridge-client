@@ -1,18 +1,20 @@
 import { Link, NavLink } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { TbLogout } from "react-icons/tb";
-import useAdmin from "../../hooks/useAdmin";
+
 
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
-  const [isAdmin]=useAdmin();
+
+
+  const userRole = sessionStorage.getItem('userRole');
 
   const navOptions = <>
     <li><Link to='/'>Home</Link></li>
     <li><Link to='/donation-requests'>Donation Requests</Link></li>
     <li><Link to='/blogs'>Blog</Link></li>
-   
+
     {user?.email && (
       <>
         <li><Link to='/funding'>Funding</Link></li>
@@ -73,21 +75,33 @@ const Navbar = () => {
                 className="dropdown-content menu p-6 shadow bg-base-100 rounded-box w-52"
               >
                 <div className="space-y-3">
-                {
-                  user && isAdmin && <li><Link className="bg-blue-400 text-white text-lg font-semibold" to="/dashboard/adminHome">Dashboard</Link></li>
-                }
-                {
-                 user &&  !isAdmin &&<li><Link className="bg-blue-400 text-white text-lg font-semibold" to="/dashboard/donorHome">Dashboard</Link></li>
-                }
-                <li>
-                
-                  <button
-                    className="w-full text-left text-white text-lg font-semibold bg-orange-400"
-                    onClick={signOutUser}
-                  >
-                   <TbLogout /> Logout
-                  </button>
-                </li>
+                  {
+                    userRole == 'admin' && <li><Link className="bg-blue-400 text-white text-lg font-semibold" to="/dashboard/adminHome">Dashboard</Link></li>
+                  }
+                  {
+                    userRole == 'volunteer' && <li><Link className="bg-blue-400 text-white text-lg font-semibold" to="/dashboard/volunteerhome">Dashboard</Link></li>
+                  }
+
+                  {userRole !== 'volunteer' && userRole !== 'admin' ? (
+                   <li>
+                     <Link
+                      className="bg-blue-400 text-white text-lg font-semibold"
+                      to="/dashboard/donorHome"
+                    >
+                      Dashboard
+                    </Link>
+                   </li>
+                  ) : null}
+
+                  <li>
+
+                    <button
+                      className="w-full text-left text-white text-lg font-semibold bg-orange-400"
+                      onClick={signOutUser}
+                    >
+                      <TbLogout /> Logout
+                    </button>
+                  </li>
                 </div>
               </ul>
             </div>

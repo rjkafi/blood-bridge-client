@@ -5,6 +5,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Lottie from "lottie-react";
 import useAuth from "../../hooks/useAuth";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -13,28 +14,8 @@ const Login = () => {
     const {signInUser}=useAuth();
     const location = useLocation();
     const navigate = useNavigate();
+    const axiosPublic=useAxiosPublic();
 
-    const handleGoogleLogin = (e) => {
-        e.preventDefault();
-        signInWithGoogle()
-            .then(() => {
-                Swal.fire({
-                    title: "Success!",
-                    text: "You have logged in successfully!",
-                    icon: "success",
-                    confirmButtonText: "OK",
-                });
-                navigate(location.state ? location.state : "/");
-            })
-            .catch(() => {
-                Swal.fire({
-                    title: "Error!",
-                    text: "Google login failed. Please try again.",
-                    icon: "error",
-                    confirmButtonText: "OK",
-                });
-            });
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -43,8 +24,14 @@ const Login = () => {
         const password = form.password.value;
 
         signInUser(email, password)
-            .then((result) => {
+            .then(async (result) => {
                 const user = result.user;
+                console.log(user)
+                sessionStorage.setItem('userEmail', user.email);
+
+                const res = await axiosPublic.get(`/user/${user.email}`);
+                sessionStorage.setItem('userRole', res.data.role);
+
                 Swal.fire({
                     title: "Welcome Back!",
                     text: `Hello, ${user.displayName || "User"}! You are now logged in.`,

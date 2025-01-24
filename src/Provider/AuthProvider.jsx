@@ -28,6 +28,7 @@ const AuthProvider = ({children}) => {
     }
     // signout
     const signOutUser = () =>{
+        sessionStorage.clear();
         setLoading(true)
         return signOut(auth)
     }
@@ -40,7 +41,7 @@ const AuthProvider = ({children}) => {
     useEffect(()=>{
         const unSubscribe=onAuthStateChanged(auth, currentUser=>{
             setUser(currentUser)
-            console.log('state captured user:', currentUser?.email)
+            // console.log('state captured user:', currentUser?.email)
             if(currentUser){
             //   get token and store client
             const userInfo={email: currentUser.email}

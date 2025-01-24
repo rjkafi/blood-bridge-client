@@ -43,13 +43,13 @@ const DonationRequests = () => {
             {
                 donationRequests.length > 0 ? <div className="donation-requests-container p-4 grid grid-cols-1 md:grid-cols-3 gap-5">
 
-                    {donationRequests.map(request => <div className="card bg-base-100  border border-amber-500 shadow-lg">
+                    {donationRequests.map((request,idx )=> <div key={idx} className="card bg-base-100  border border-amber-500 shadow-lg">
                         <div className="card-body space-y-6">
 
                             <div className='flex justify-between items-center'>
                                 <div className='flex space-x-2 items-center'>
                                     {/* icon */}
-                                    <div className=' border   text-black rounded-full p-3 text-xl' ><FaHospitalUser /></div>
+                                    <div className=' border   text-black rounded-full p-4 text-xl' ><FaHospitalUser /></div>
                                     <div>
                                         <p className='text-gray-400'>Recipient</p>
                                         <h4 className='text-xl'>{request.recipientName}</h4>
@@ -58,7 +58,7 @@ const DonationRequests = () => {
                                 <div>
                                     <div className='flex space-x-2 items-center'>
                                         {/* icon */}
-                                        <div className=' border   text-black rounded-full p-3 text-xl' ><MdBloodtype /></div>
+                                        <div className=' border   text-black rounded-full p-4 text-xl' ><MdBloodtype /></div>
                                         <div>
                                             <p className='text-gray-400'>Blood Group</p>
                                             <h4 className='text-xl'>" {request.bloodGroup} "</h4>
@@ -70,7 +70,7 @@ const DonationRequests = () => {
                             <div className='flex justify-between items-center'>
                                 <div className='flex space-x-2 items-center'>
                                     {/* icon */}
-                                    <div className=' border   text-black rounded-full p-3 text-xl' ><FaRegCalendarAlt /></div>
+                                    <div className=' border   text-black rounded-full p-4 text-xl' ><FaRegCalendarAlt /></div>
                                     <div>
 
                                         <p className='text-gray-400'>DonationDate</p>
@@ -80,7 +80,7 @@ const DonationRequests = () => {
                                 <div>
                                     <div className='flex space-x-2'>
                                         {/* icon */}
-                                        <div className=' border   text-black rounded-full p-3 text-xl' ><IoIosTime /></div>
+                                        <div className=' border   text-black rounded-full p-4 text-xl' ><IoIosTime /></div>
                                         <div>
                                             <p className='text-gray-400'>Donation Time</p>
                                             <h4 className='text-xl'>{request.donationTime}</h4>

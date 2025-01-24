@@ -4,11 +4,17 @@ import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import { FaUsersLine } from "react-icons/fa6";
 import { TiThListOutline } from "react-icons/ti";
 import { RiRefund2Line } from "react-icons/ri";
+import { Navigate } from "react-router-dom";
 
 
 const AdminHome = () => {
     const { user } = useAuth();
     const axiosSecure = useAxiosSecure();
+    const userRole = sessionStorage.getItem('userRole');
+
+    if(userRole !== 'admin'){
+        Navigate('/dashboard')
+    }
 
     const { data: stats = {}, isLoading, isError } = useQuery({
         queryKey: ['admin-stats'],
@@ -36,7 +42,7 @@ const AdminHome = () => {
             </h2>
             <div className="py-20">
                 <div className="  gap-3 grid grid-cols-2">
-                    <div className="stat border bg-gradient-to-r from-teal-400 to-blue-500 rounded-md">
+                    <div className="stat  bg-gradient-to-r from-teal-400 to-blue-500 rounded-md">
                         <div className="stat-figure ">
                         <FaUsersLine className="text-3xl" />
                         </div>

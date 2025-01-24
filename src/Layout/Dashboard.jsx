@@ -2,42 +2,48 @@ import { IoArrowBackCircleSharp } from "react-icons/io5";
 import { Link, NavLink, Outlet } from "react-router-dom";
 import useAdmin from "../hooks/useAdmin";
 import useAuth from "../hooks/useAuth";
+import { useEffect } from "react";
+import useAxiosPublic from "../hooks/useAxiosPublic";
 
 const Dashboard = () => {
     const { user} = useAuth();
     const [isAdmin]=useAdmin();
+    const axiosPublic= useAxiosPublic();
+
+    const userRole = sessionStorage.getItem('userRole');
+
+
     
 
-  
+
+    // console.log(user);
 
     // Conditional rendering based on role
     const renderNavLinks = () => {
-        if (isAdmin) {
+        if (userRole === "admin") {
             return (
                 <>
-                    <li><NavLink to="/dashboard/all-users" activeClassName="text-white bg-blue-500">All Users</NavLink></li>
-                    <li><NavLink to="/dashboard/all-blood-donation-request" activeClassName="text-white bg-blue-500">All Blood Donation Requests</NavLink></li>
-                    <li><NavLink to="/dashboard/content-management" activeClassName="text-white bg-blue-500">Content Management</NavLink></li>
+                    <li><NavLink to="/dashboard/all-users" className="text-white ">All Users</NavLink></li>
+                    <li><NavLink to="/dashboard/all-blood-donation-request" className="text-white ">All Blood Donation Requests</NavLink></li>
+                    <li><NavLink to="/dashboard/content-management" className="text-white ">Content Management</NavLink></li>
                 </>
             );
-        }
-
-        if (user?.role === "Donor") {
+        }else if (userRole === "donor") {
+            // console.log(user?.role);
+            
             return (
                 <>
-                    <li><NavLink to="/dashboard/donorHome" activeClassName="text-white bg-blue-500">Donor Home</NavLink></li>
-                    <li><NavLink to="/dashboard/my-donation-requests" activeClassName="text-white bg-blue-500">My Donation Requests</NavLink></li>
-                    <li><NavLink to="/dashboard/create-donation-request" activeClassName="text-white bg-blue-500">Create Donation Request</NavLink></li>
+                    <li><NavLink to="/dashboard/donorHome" className="text-white ">Donor Home</NavLink></li>
+                    <li><NavLink to="/dashboard/my-donation-requests" className="text-white ">My Donation Requests</NavLink></li>
+                    <li><NavLink to="/dashboard/create-donation-request" className="text-white ">Create Donation Request</NavLink></li>
                 </>
             );
-        }
-
-        if (user?.role === "volunteer") {
+        }else if (userRole === "volunteer") {
             return (
                 <>
-                    <li><NavLink to="/dashboard/volunteer-home" activeClassName="text-white bg-blue-500">Volunteer Home</NavLink></li>
-                    <li><NavLink to="/dashboard/all-blood-donations-request" activeClassName="text-white bg-blue-500">All Blood Donation Requests</NavLink></li>
-                    <li><NavLink to="/dashboard/content-management" activeClassName="text-white bg-blue-500">Manage Donation Requests</NavLink></li>
+                    <li><NavLink to="/dashboard/volunteer-home" className="text-white ">Volunteer Home</NavLink></li>
+                    <li><NavLink to="/dashboard/all-blood-donations-request" className="text-white ">All Blood Donation Requests</NavLink></li>
+                    <li><NavLink to="/dashboard/content-management" className="text-white ">Manage Donation Requests</NavLink></li>
                 </>
             );
         }

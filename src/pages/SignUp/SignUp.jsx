@@ -84,7 +84,7 @@ const SignUp = () => {
                                 district: data.district,
                                 upazila: data.upazila,
                                 status: 'Active',
-                                role: 'Donor'
+                                role: 'donor'
                             };
                             axiosPublic.post('/users', userInfo)
                                 .then(res => {

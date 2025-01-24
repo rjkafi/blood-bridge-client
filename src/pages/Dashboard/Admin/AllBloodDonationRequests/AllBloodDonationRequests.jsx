@@ -67,13 +67,13 @@ const AllBloodDonationRequests = () => {
 
     const handleFilterChange = (value) => {
         setFilter(value);
-        setCurrentPage(1); // Reset to first page on filter change
-        refetch(); // Refetch data with the new filter
+        setCurrentPage(1); 
+        refetch(); 
     };
 
     const handlePageChange = (page) => {
         setCurrentPage(page);
-        refetch(); // Refetch data with the new page number
+        refetch(); 
     };
 
  const handleEdit = (id) => {
@@ -137,6 +137,7 @@ const AllBloodDonationRequests = () => {
                         scroll={{ x: 'max-content' }} 
                     />
                     <Pagination
+                    
                         current={currentPage}
                         total={users.total}
                         pageSize={10}
