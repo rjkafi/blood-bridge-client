@@ -60,7 +60,7 @@ const router = createBrowserRouter([
       },{
         path:'blogs/:id',
         element:<BlogDetails></BlogDetails>,
-        loader:({params})=>fetch(`http://localhost:5000/blogs/${params.id}`)
+        loader:({params})=>fetch(`https://blood-bridge-server-steel.vercel.app/blogs/${params.id}`)
       },{
         path:'/funds',
         element:<PrivateRoute><Funding></Funding></PrivateRoute>

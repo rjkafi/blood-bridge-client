@@ -48,7 +48,7 @@ Blood Bridge is a user-friendly and efficient platform designed to facilitate bl
 ---
 
 ## 🚀 Live Site  
-🌐 [Blood Bridge Live](#)  
+🌐 [Blood Bridge Live](https://blood-bridge-e81d4.web.app/)  
 (Login credentials provided below)
 
 ---
@@ -57,11 +57,3 @@ Blood Bridge is a user-friendly and efficient platform designed to facilitate bl
 - **Username**: `rasel@gmail.com`  
 - **Password**: `Rasel1234`
 
----
-
-## 📜 Installation and Usage  
-
-1. **Clone the Repository**:  
-   ```bash
-   git clone https://github.com/your-username/blood-bridge.git
-   cd blood-bridge
