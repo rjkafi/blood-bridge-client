@@ -26,6 +26,7 @@ const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState({});
+    const {user}=useAuth();
 
 
     const togglePassword = (e) => {
@@ -62,9 +63,11 @@ const SignUp = () => {
 
         createUser(data.email, data.password)
             .then(result => {
-                const loggedUser = result.user;
-                console.log(loggedUser.data)
-                updateUserProfile(data.name, data.photoURL)
+                const loggedUser = result.data;
+                console.log(loggedUser);
+                
+                
+                    updateUserProfile(data.name, data.photoURL)
                     .then(async () => {
                         // Prepare image file for upload
                         const imageFile = { image: data.image[0] };
@@ -86,9 +89,17 @@ const SignUp = () => {
                                 status: 'Active',
                                 role: 'donor'
                             };
+                          
                             axiosPublic.post('/users', userInfo)
-                                .then(res => {
+                                .then(async(res )=> {
                                     if (res.data.insertedId) {
+                                        const getUser = await axiosPublic.get(`/user/${data.email}`);
+                                        const user = getUser.data;
+        
+                                         // Store email and role in sessionStorage
+                                        sessionStorage.setItem('userEmail', user .email);
+                                        sessionStorage.setItem('userRole', user .role);
+                                       
                                         reset();
                                         Swal.fire({
                                             position: 'top-end',

@@ -85,7 +85,7 @@ const DonorHome = () => {
 
     return (
         <div>
-            <h2 className="text-2xl mb-4">Welcome, !</h2>
+            <h2 className="text-2xl mb-4">Welcome, {user.displayName} !</h2>
             
 
             {donationRequests.length > 0 ? (

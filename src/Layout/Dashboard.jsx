@@ -33,7 +33,7 @@ const Dashboard = () => {
             
             return (
                 <>
-                    <li><NavLink to="/dashboard/donorHome" className="text-white ">Donor Home</NavLink></li>
+                    {/* <li><NavLink to="/dashboard/donorHome" className="text-white ">Donor Home</NavLink></li> */}
                     <li><NavLink to="/dashboard/my-donation-requests" className="text-white ">My Donation Requests</NavLink></li>
                     <li><NavLink to="/dashboard/create-donation-request" className="text-white ">Create Donation Request</NavLink></li>
                 </>
@@ -41,7 +41,7 @@ const Dashboard = () => {
         }else if (userRole === "volunteer") {
             return (
                 <>
-                    <li><NavLink to="/dashboard/volunteer-home" className="text-white ">Volunteer Home</NavLink></li>
+                
                     <li><NavLink to="/dashboard/all-blood-donations-request" className="text-white ">All Blood Donation Requests</NavLink></li>
                     <li><NavLink to="/dashboard/content-management" className="text-white ">Manage Donation Requests</NavLink></li>
                 </>
@@ -55,7 +55,7 @@ const Dashboard = () => {
         <div className="md:flex min-h-screen">
             {/* Sidebar - Dashboard navigation */}
             <div className="md:w-64 w-full bg-blue-300 p-4">
-                <div className="btn-sm outline text-xl flex gap-2 justify-center items-center mb-6">
+                <div className="btn outline text-xl flex gap-2 justify-center items-center mb-6">
                     <IoArrowBackCircleSharp />
                     <Link to="/"> Back Home</Link>
                 </div>

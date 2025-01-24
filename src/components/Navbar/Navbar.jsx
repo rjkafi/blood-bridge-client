@@ -17,7 +17,7 @@ const Navbar = () => {
 
     {user?.email && (
       <>
-        <li><Link to='/funding'>Funding</Link></li>
+        <li><Link to='/funds'>Funding</Link></li>
       </>
     )}
   </>;

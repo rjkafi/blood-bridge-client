@@ -23,6 +23,8 @@ import Blog from "../pages/Blog/Blog";
 import BlogDetails from "../pages/Blog/BlogDetails";
 import AdminHome from "../pages/Dashboard/Admin/AdminHome/AdminHome";
 import AdminRoute from "./AdminRoute";
+import PrivateRoute from "./PrivateRoute";
+import Funding from "../pages/Funding/Funding";
 
 
 
@@ -51,7 +53,7 @@ const router = createBrowserRouter([
         element:<DonationRequests></DonationRequests>
        },{
         path:'donation-request-details/:id',
-        element:<DonationRequestDetails></DonationRequestDetails>
+        element:<PrivateRoute><DonationRequestDetails></DonationRequestDetails></PrivateRoute>
       },{
         path:'blogs',
         element:<Blog></Blog>
@@ -59,12 +61,15 @@ const router = createBrowserRouter([
         path:'blogs/:id',
         element:<BlogDetails></BlogDetails>,
         loader:({params})=>fetch(`http://localhost:5000/blogs/${params.id}`)
-      }
+      },{
+        path:'/funds',
+        element:<PrivateRoute><Funding></Funding></PrivateRoute>
+       }
 
       ]
     },{
       path:'/dashboard',
-      element:<Dashboard></Dashboard>,
+      element:<PrivateRoute><Dashboard></Dashboard></PrivateRoute>,
       children:[
         {
           path:'donorHome',
@@ -111,7 +116,8 @@ const router = createBrowserRouter([
           element:<EditDonationRequest></EditDonationRequest>,
         }
       ]
-    },{
+    },
+    {
       path:'*',
       element:<ErrorPage></ErrorPage>
   }
