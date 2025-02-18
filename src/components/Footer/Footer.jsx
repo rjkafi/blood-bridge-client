@@ -1,5 +1,7 @@
 const Footer = () => {
     return (
+        <>
+        <div className="w-full">
         <footer className="bg-slate-700 text-white py-8 px-4">
             <div className="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Logo and Description */}
@@ -46,6 +48,8 @@ const Footer = () => {
                 <p className="text-center text-sm">&copy; 2025 Blood Bridge. All rights reserved.</p>
             </div>
         </footer>
+        </div>
+        </>
     );
 };
 

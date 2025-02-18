@@ -1,16 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import useAxiosPublic from '../../hooks/useAxiosPublic';
 import districts from '../../json/districts.json';
-import upazilas from '../../json/upazilas.json'
-
+import upazilas from '../../json/upazilas.json';
 
 const Search = () => {
   const [bloodGroup, setBloodGroup] = useState('');
   const [donors, setDonors] = useState([]);
-  const[district,setDistrict]=useState();
-  const[upazila,setUpazila]=useState();
+  const [district, setDistrict] = useState('');
+  const [upazila, setUpazila] = useState('');
+  const [filteredUpazilas, setFilteredUpazilas] = useState([]);
   const axiosPublic = useAxiosPublic();
 
+  useEffect(() => {
+    if (district) {
+      // Filter Upazilas based on selected District
+      const filtered = upazilas.filter((upazila) => upazila.district_id === districts.find(d => d.name === district)?.id);
+      setFilteredUpazilas(filtered);
+      setUpazila(''); // Reset Upazila selection
+    } else {
+      setFilteredUpazilas([]);
+    }
+  }, [district]);
 
   const handleSearch = async () => {
     try {
@@ -24,7 +34,7 @@ const Search = () => {
   };
 
   return (
-    <div className="py-32">
+    <div className="py-12">
       <div className="max-w-screen-md mx-auto">
         <h3 className="text-center font-semibold text-3xl py-4">Search Donors</h3>
         <div className="border rounded-md px-2 py-3 items-center justify-evenly md:flex gap-2">
@@ -52,10 +62,8 @@ const Search = () => {
             onChange={(e) => setDistrict(e.target.value)}
           >
             <option value="">Select District</option>
-            {districts.map(district => (
-              <option key={district.id} value={district.name}>
-                {district.name}
-              </option>
+            {districts.map(d => (
+              <option key={d.id} value={d.name}>{d.name}</option>
             ))}
           </select>
 
@@ -64,12 +72,11 @@ const Search = () => {
             className="input input-bordered" 
             value={upazila} 
             onChange={(e) => setUpazila(e.target.value)}
+            disabled={!district} // Disable if no district selected
           >
             <option value="">Select Upazila</option>
-            {upazilas.map(upazila => (
-              <option key={upazila.id} value={upazila.name}>
-                {upazila.name}
-              </option>
+            {filteredUpazilas.map(u => (
+              <option key={u.id} value={u.name}>{u.name}</option>
             ))}
           </select>
 
@@ -93,7 +100,7 @@ const Search = () => {
               </div>
             ))
           ) : (
-            <p className="text-center text-xl text-gray-400">No donors found</p>
+            <p className="text-center text-xl text-gray-400">No Search donors found</p>
           )}
         </div>
       </div>

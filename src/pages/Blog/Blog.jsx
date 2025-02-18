@@ -50,7 +50,7 @@ const Blog = () => {
   }
 
   return (
-    <div className='py-20'>
+    <div className='py-12'>
       <div className='md:flex md:justify-between my-7 px-3'>
         <h2 className="text-3xl font-bold">Blog</h2>
         <h4 className='text-xl font-semibold md:w-1/2 py-4'>
@@ -66,11 +66,11 @@ const Blog = () => {
                 alt={blog.title}
                 className="w-full h-72 object-cover"
               />
-              <div className="p-4 bg-gray-100">
-                <h3 className="text-2xl font-semibold mb-2">{blog.title}</h3>
-                <p className="text-xl text-gray-700 flex items-center space-x-2">
+              <div className="p-4 bg-base-100 base-content">
+                <h3 className="text-2xl font-semibold mb-2 ">{blog.title}</h3>
+                <p className="text-xl  flex items-center space-x-2">
                   <MdPublishedWithChanges className='mr-2' />
-                  Published on: <span className='text-lg text-gray-500'>
+                  Published on: <span className='text-lg base-content'>
                     {new Date(blog.createdAt).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'short',
