@@ -64,7 +64,7 @@ const DonationRequestDetails = () => {
   }
 
   return (
-    <div className="p-20 mx-auto">
+    <div  className="container mx-auto py-10">
       <h2 className="text-2xl font-semibold text-center mt-8">Donation Request Details</h2>
       {donationRequest && (
         <div className="space-y-2 mt-12">

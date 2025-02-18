@@ -1,32 +1,30 @@
-
-import Lottie from 'lottie-react';
-import animationData from '../../lottie/error.json';
 import { Helmet } from 'react-helmet-async';
+import { FaArrowLeft } from 'react-icons/fa';
+import { NavLink } from 'react-router-dom';
 
 const ErrorPage = () => {
-    const defaultOptions = {
-        loop: true,
-        autoplay: true,
-        animationData: animationData, 
-        rendererSettings: {
-            preserveAspectRatio: 'xMidYMid slice' 
-        },
-    };
-
     return (
         <>
-        <div>
             <Helmet>
-                <title>Error page || Blood Bridge</title>
+                <title>Error Page || Blood Bridge</title>
             </Helmet>
-        </div>
-        <div className='py-20'>
-            <Lottie options={defaultOptions} height={270} width={270} />
-            <h3 className="text-5xl font-bold text-center mt-12">
-                Page Not Found
-            </h3>
-        </div>
 
+            <div className="flex flex-col items-center justify-center min-h-svh text-center p-4">
+                <img
+                    src="https://i.ibb.co/VpPMxxD8/404-error-with-people-holding-the-numbers.gif"
+                    alt="404 Error"
+                    className="max-w-[250px] sm:max-w-[260px] md:max-w-[400px]"
+                />
+                <h3 className="text-3xl sm:text-3xl font-bold  text-gray-800 dark:text-white">
+                    Oops!! Page Not Found
+                </h3>
+                <NavLink
+                    to="/"
+                    className="mt-2 flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white text-lg font-semibold px-6 py-3 rounded-lg transition-all"
+                >
+                    <FaArrowLeft /> Go Back Home
+                </NavLink>
+            </div>
         </>
     );
 };

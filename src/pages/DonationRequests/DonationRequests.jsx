@@ -29,7 +29,7 @@ const DonationRequests = () => {
     }, [axiosPublic]);
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <div className='flex text-center justify-center min-h-screen'>Loading...</div>;
     }
 
     if (error) {
@@ -102,8 +102,9 @@ const DonationRequests = () => {
                     )}
                 </div> :
                     <p className='text-center text-xl text-gray-200 mt-10'>No Request here</p>
-
+             
             }
+        
         </div>
     );
 };

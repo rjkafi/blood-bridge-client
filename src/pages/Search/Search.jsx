@@ -72,7 +72,7 @@ const Search = () => {
             className="input input-bordered" 
             value={upazila} 
             onChange={(e) => setUpazila(e.target.value)}
-            disabled={!district} // Disable if no district selected
+            disabled={!district} 
           >
             <option value="">Select Upazila</option>
             {filteredUpazilas.map(u => (

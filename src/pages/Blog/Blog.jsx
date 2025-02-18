@@ -42,7 +42,7 @@ const Blog = () => {
   };
 
   if (isLoading) {
-    return <p>Loading blogs...</p>;
+    return <div className='flex text-center justify-center min-h-screen'>Loading blogs...</div>;
   }
 
   if (error) {
@@ -50,7 +50,7 @@ const Blog = () => {
   }
 
   return (
-    <div className='py-12'>
+    <div className='py-12 container mx-auto'>
       <div className='md:flex md:justify-between my-7 px-3'>
         <h2 className="text-3xl font-bold">Blog</h2>
         <h4 className='text-xl font-semibold md:w-1/2 py-4'>

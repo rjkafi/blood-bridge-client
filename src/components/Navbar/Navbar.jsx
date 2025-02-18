@@ -85,8 +85,8 @@ const Navbar = () => {
   );
 
   return (
-    <div className="navbar sticky top-0 z-50 bg-transparent bg-base-200 backdrop-blur-lg">
-      <div className="navbar-start">
+    <div className="navbar  sticky top-0 z-50 bg-transparent bg-base-200 backdrop-blur-lg">
+      <div className="navbar-start ml-2">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
             <svg
@@ -122,7 +122,7 @@ const Navbar = () => {
         <ul className=" menu-horizontal px-1">{navOptions}</ul>
       </div>
 
-      <div className="navbar-end">
+      <div className="navbar-end mr-2">
         <button
           className="text-2xl cursor-pointer text-base-content btn hover:bg-base-300 btn-circle btn-ghost hover:text-orange-500"
           onClick={toggleDarkMode}
@@ -132,7 +132,7 @@ const Navbar = () => {
         {user && user?.email ? (
           <div className="flex items-center space-x-2">
             <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="btn btn-ghost">
+              <label tabIndex={0} className="">
                 <img
                   className="h-12 w-12 rounded-full cursor-pointer"
                   src={user.photoURL}

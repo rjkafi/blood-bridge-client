@@ -44,7 +44,7 @@ const Footer = () => {
                 </div>
             </div>
 
-            <div className="mt-8 border-t border-gray-700 pt-4">
+            <div className="mt-8 border-t border-red-400 pt-4">
                 <p className="text-center text-sm">&copy; 2025 Blood Bridge. All rights reserved.</p>
             </div>
         </footer>
