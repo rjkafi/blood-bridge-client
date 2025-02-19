@@ -5,7 +5,17 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      animation: {
+        marquee: "marquee 15s linear infinite",
+      },
+      keyframes: {
+        marquee: {
+          from: { transform: "translateX(100%)" },
+          to: { transform: "translateX(-100%)" },
+        },
+      },
+    },
   },
   plugins: [require('daisyui')],
 

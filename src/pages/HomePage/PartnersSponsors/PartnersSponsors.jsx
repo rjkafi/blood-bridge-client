@@ -1,3 +1,5 @@
+import React from "react";
+
 const PartnersSponsors = () => {
     const partners = [
         { name: "Red Cross", logo: "https://i.ibb.co/tTNNZzNj/th-14.jpg" },
@@ -8,7 +10,7 @@ const PartnersSponsors = () => {
     ];
 
     return (
-        <div className="my-16 px-6">
+        <div className="my-16 px-6 overflow-hidden">
             <div className="max-w-7xl mx-auto text-center">
                 <h2 className="text-4xl font-bold text-base-content">
                     Our Partners & Sponsors
@@ -18,15 +20,19 @@ const PartnersSponsors = () => {
                 </p>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 justify-center items-center mt-8">
-                {partners.map((partner, index) => (
-                    <div key={index} className="flex justify-center">
-                        <div className="p-4 rounded-lg shadow-md  dark:bg-gray-800 dark:text-white hover:scale-105 transition-transform">
-                            <img src={partner.logo} alt={partner.name} className="w-24 h-24 object-cover " />
-                            <p className="mt-2 text-center font-semibold">{partner.name}</p>
+            {/* Marquee Effect Container */}
+            <div className="relative mt-8 overflow-hidden whitespace-nowrap">
+                <div className="flex space-x-8 animate-marquee">
+                    {partners.concat(partners).map((partner, index) => (
+                        <div key={index} className="flex-shrink-0">
+                            <img
+                                src={partner.logo}
+                                alt={partner.name}
+                                className="w-24 h-24 object-cover mx-auto"
+                            />
                         </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
         </div>
     );
