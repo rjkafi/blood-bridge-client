@@ -23,6 +23,7 @@ const Dashboard = () => {
         if (userRole === "admin") {
             return (
                 <>
+                    <li><NavLink to="/dashboard/adminHome" className="text-white ">Overview</NavLink></li>
                     <li><NavLink to="/dashboard/all-users" className="text-white ">All Users</NavLink></li>
                     <li><NavLink to="/dashboard/all-blood-donation-request" className="text-white ">All Blood Donation Requests</NavLink></li>
                     <li><NavLink to="/dashboard/content-management" className="text-white ">Content Management</NavLink></li>
@@ -33,7 +34,7 @@ const Dashboard = () => {
             
             return (
                 <>
-                    {/* <li><NavLink to="/dashboard/donorHome" className="text-white ">Donor Home</NavLink></li> */}
+                    <li><NavLink to="/dashboard/donorProfile" className="text-white ">My Profile</NavLink></li>
                     <li><NavLink to="/dashboard/my-donation-requests" className="text-white ">My Donation Requests</NavLink></li>
                     <li><NavLink to="/dashboard/create-donation-request" className="text-white ">Create Donation Request</NavLink></li>
                 </>

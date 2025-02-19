@@ -70,14 +70,14 @@ const Navbar = () => {
       {user?.email && (
         <li>
           <NavLink
-            to="/funds"
+            to="/events"
             className={({ isActive }) =>
               `px-4 py-2 transition-colors ${
                 isActive ? "text-red-500" : "text-base-content"
               }`
             }
           >
-            Funding
+            Events
           </NavLink>
         </li>
       )}

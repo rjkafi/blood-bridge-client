@@ -24,12 +24,8 @@ import BlogDetails from "../pages/Blog/BlogDetails";
 import AdminHome from "../pages/Dashboard/Admin/AdminHome/AdminHome";
 import AdminRoute from "./AdminRoute";
 import PrivateRoute from "./PrivateRoute";
-import Funding from "../pages/Funding/Funding";
-
-
-
-
-
+import DonorProfile from "../pages/Dashboard/Profile/DonorProfile";
+import Events from "../pages/Events/Events";
 
 const router = createBrowserRouter([
     {
@@ -62,8 +58,8 @@ const router = createBrowserRouter([
         element:<BlogDetails></BlogDetails>,
         loader:({params})=>fetch(`https://blood-bridge-server-steel.vercel.app/blogs/${params.id}`)
       },{
-        path:'/funds',
-        element:<PrivateRoute><Funding></Funding></PrivateRoute>
+        path:'/events',
+        element:<Events></Events>
        }
 
       ]
@@ -74,6 +70,9 @@ const router = createBrowserRouter([
         {
           path:'donorHome',
           element:<DonorHome></DonorHome>
+        },{
+          path:'donorProfile',
+          element:<DonorProfile></DonorProfile>
         },{
           path:'my-donation-requests',
           element:<MyDonationRequests></MyDonationRequests>
