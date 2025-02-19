@@ -34,7 +34,7 @@ const ContactUs = () => {
 
                         {/* Contact Form */}
                         <div>
-                            <h3 className="text-xl font-semibold mb-4">Send Us a Message</h3>
+                            <h3 className="text-xl font-semibold mb-4 ">Send Us a Message</h3>
                             <form>
                                 <div className="mb-4">
                                     <label htmlFor="name" className="block text-sm font-medium">Name</label>
