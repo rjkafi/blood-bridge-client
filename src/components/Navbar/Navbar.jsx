@@ -34,8 +34,7 @@ const Navbar = () => {
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `px-4 py-2 transition-colors ${
-              isActive ? "text-red-500" : "text-base-content"
+            `px-4 py-2 transition-colors ${isActive ? "text-red-500" : "text-base-content"
             }`
           }
         >
@@ -46,8 +45,7 @@ const Navbar = () => {
         <NavLink
           to="/donation-requests"
           className={({ isActive }) =>
-            `px-4 py-2 transition-colors ${
-              isActive ? "text-red-500" : "text-base-content"
+            `px-4 py-2 transition-colors ${isActive ? "text-red-500" : "text-base-content"
             }`
           }
         >
@@ -58,8 +56,7 @@ const Navbar = () => {
         <NavLink
           to="/blogs"
           className={({ isActive }) =>
-            `px-4 py-2 transition-colors ${
-              isActive ? "text-red-500" : "text-base-content"
+            `px-4 py-2 transition-colors ${isActive ? "text-red-500" : "text-base-content"
             }`
           }
         >
@@ -72,8 +69,7 @@ const Navbar = () => {
           <NavLink
             to="/events"
             className={({ isActive }) =>
-              `px-4 py-2 transition-colors ${
-                isActive ? "text-red-500" : "text-base-content"
+              `px-4 py-2 transition-colors ${isActive ? "text-red-500" : "text-base-content"
               }`
             }
           >
@@ -81,6 +77,22 @@ const Navbar = () => {
           </NavLink>
         </li>
       )}
+     {user?.email &&(
+      <li>
+      <NavLink
+        to="/about"
+        className={({ isActive }) =>
+          `px-4 py-2 transition-colors ${isActive ? "text-red-500" : "text-base-content"
+          }`
+        }
+      >
+        About Us
+      </NavLink>
+    </li>
+
+     )}
+     
+
     </>
   );
 

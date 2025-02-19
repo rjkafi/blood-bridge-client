@@ -26,6 +26,7 @@ import AdminRoute from "./AdminRoute";
 import PrivateRoute from "./PrivateRoute";
 import DonorProfile from "../pages/Dashboard/Profile/DonorProfile";
 import Events from "../pages/Events/Events";
+import AboutUs from "../pages/AboutUs/AboutUs";
 
 const router = createBrowserRouter([
     {
@@ -60,6 +61,9 @@ const router = createBrowserRouter([
       },{
         path:'/events',
         element:<Events></Events>
+       },{
+        path:'/about',
+        element:<AboutUs></AboutUs>
        }
 
       ]
