@@ -86,7 +86,7 @@ const Navbar = () => {
 
   return (
     <div className="navbar  sticky top-0 z-50 bg-transparent bg-base-200 backdrop-blur-lg">
-      <div className="navbar-start ml-2">
+      <div className="navbar-start ">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
             <svg
@@ -112,7 +112,7 @@ const Navbar = () => {
           </ul>
         </div>
         <img
-          className="h-16 w-24"
+          className="h-16 w-24 md:ml-4"
           src="https://i.ibb.co.com/h1zKYzZ/1-removebg-preview.png"
           alt=""
         />
@@ -122,7 +122,7 @@ const Navbar = () => {
         <ul className=" menu-horizontal px-1">{navOptions}</ul>
       </div>
 
-      <div className="navbar-end mr-2">
+      <div className="navbar-end md:pr-5">
         <button
           className="text-2xl cursor-pointer text-base-content btn hover:bg-base-300 btn-circle btn-ghost hover:text-orange-500"
           onClick={toggleDarkMode}
