@@ -4,7 +4,7 @@ const AboutUs = () => {
     return (
         <div className=" text-base-content py-12 px-6 md:px-16 lg:px-32">
             <section className="text-center mb-12">
-                <h1 className="text-5xl font-extrabold text-red-600">About Us</h1>
+                <h1 className="text-5xl font-extrabold text-red-600">About Our Team</h1>
                 <p className="text-lg mt-4 max-w-3xl mx-auto">We are dedicated to saving lives by providing a reliable blood donation system that connects donors with those in need.</p>
             </section>
             <section className="relative flex flex-col md:flex-row items-center gap-12 mb-16">
