@@ -1,7 +1,7 @@
 import districts from '../../json/districts.json';
 import upazilas from '../../json/upazilas.json';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
@@ -10,24 +10,36 @@ import Lottie from "lottie-react";
 import animationData from '../../lottie/register.json';
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import { Link } from "react-router-dom";
-import useAuth from '../../hooks/useAuth'
+import useAuth from '../../hooks/useAuth';
 import useAxiosPublic from "../../hooks/useAxiosPublic";
-
 
 const image_hosting_key = import.meta.env.VITE_IMAGE_HOSTING_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
-
 const SignUp = () => {
     const { register, handleSubmit, reset, formState: { errors }, } = useForm();
     const { createUser, updateUserProfile } = useAuth();
+    const [district, setDistrict] = useState('');
+    const [upazila, setUpazila] = useState('');
+    const [filteredUpazilas, setFilteredUpazilas] = useState([]);
     const navigate = useNavigate();
     const axiosPublic = useAxiosPublic();
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState({});
-    const {user}=useAuth();
 
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (district) {
+            // Filter Upazilas based on selected District
+            const filtered = upazilas.filter((upazila) => upazila.district_id === districts.find(d => d.name === district)?.id);
+            setFilteredUpazilas(filtered);
+            setUpazila(''); // Reset Upazila selection
+        } else {
+            setFilteredUpazilas([]); 
+        }
+    }, [district]);
 
     const togglePassword = (e) => {
         e.preventDefault();
@@ -59,15 +71,12 @@ const SignUp = () => {
             setError({ ...error, password: null });
         }
 
-
-
         createUser(data.email, data.password)
             .then(result => {
                 const loggedUser = result.data;
                 console.log(loggedUser);
-                
-                
-                    updateUserProfile(data.name, data.photoURL)
+
+                updateUserProfile(data.name, data.photoURL)
                     .then(async () => {
                         // Prepare image file for upload
                         const imageFile = { image: data.image[0] };
@@ -89,17 +98,17 @@ const SignUp = () => {
                                 status: 'Active',
                                 role: 'donor'
                             };
-                          
+
                             axiosPublic.post('/users', userInfo)
-                                .then(async(res )=> {
+                                .then(async (res) => {
                                     if (res.data.insertedId) {
                                         const getUser = await axiosPublic.get(`/user/${data.email}`);
                                         const user = getUser.data;
-        
-                                         // Store email and role in sessionStorage
-                                        sessionStorage.setItem('userEmail', user .email);
-                                        sessionStorage.setItem('userRole', user .role);
-                                       
+
+                                        // Store email and role in sessionStorage
+                                        sessionStorage.setItem('userEmail', user.email);
+                                        sessionStorage.setItem('userRole', user.role);
+
                                         reset();
                                         Swal.fire({
                                             position: 'top-end',
@@ -112,7 +121,6 @@ const SignUp = () => {
                                     }
                                 });
                         }
-
 
                     })
                     .catch(error => console.log(error));
@@ -127,8 +135,8 @@ const SignUp = () => {
             <div className="min-h-screen justify-center items-center">
                 <div className="hero bg-base-200 min-h-screen">
                     <div className="hero-content flex-col lg:flex-row-reverse">
-                        <div className="card py-7 bg-base-100 w-full max-w-lg shrink-0 shadow-2xl">
-                            <h3 className="text-3xl font-bold text-center">Create Your Account</h3>
+                        <div className="card py-4 bg-base-100 w-full max-w-lg shrink-0 shadow-2xl">
+                            <h3 className="md:text-3xl text-2xl font-bold text-center">Create Your Account</h3>
                             <form onSubmit={handleSubmit(onSubmit)} className="card-body grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="form-control">
                                     <label className="label">
@@ -172,12 +180,16 @@ const SignUp = () => {
                                     <label className="label">
                                         <span className="label-text">District</span>
                                     </label>
-                                    <select name="district" className="select select-bordered" required {...register("district", { required: true })}>
+                                    <select
+                                        onChange={(e) => setDistrict(e.target.value)}
+                                        name="district"
+                                        className="select select-bordered"
+                                        required
+                                        {...register("district", { required: true })}
+                                    >
                                         <option value="">Select District</option>
-                                        {districts.map((district) => (
-                                            <option key={district.id} value={district.name}>
-                                                {district.name}
-                                            </option>
+                                        {districts.map(d => (
+                                            <option key={d.id} value={d.name}>{d.name}</option>
                                         ))}
                                     </select>
                                     {errors.district && <span className="text-red-600 text-xs">District is required</span>}
@@ -186,13 +198,22 @@ const SignUp = () => {
                                     <label className="label">
                                         <span className="label-text">Upazila</span>
                                     </label>
-                                    <select name="upazila" className="select select-bordered" required {...register("upazila", { required: true })}>
-                                        <option value="Upazila 1">Select Upazila</option>
-                                        {upazilas.map((upazila) => (
-                                            <option key={upazila.id} value={upazila.name}>
-                                                {upazila.name}
-                                            </option>
-                                        ))}
+                                    <select
+                                        onChange={(e) => setUpazila(e.target.value)}
+                                        name="upazila"
+                                        className="select select-bordered"
+                                        required
+                                        {...register("upazila")}
+                                        // {...register("upazila", { required: true })}
+                                    >
+                                        <option value="">Select Upazila</option>
+                                        {filteredUpazilas.length > 0 ? (
+                                            filteredUpazilas.map(u => (
+                                                <option key={u.id} value={u.name}>{u.name}</option>
+                                            ))
+                                        ) : (
+                                            <option>No Upazilas available</option>
+                                        )}
                                     </select>
                                     {errors.upazila && <span className="text-red-600 text-xs">Upazila is required</span>}
                                 </div>
@@ -238,7 +259,7 @@ const SignUp = () => {
                                         </label>
                                     )
                                 }
-                                <div className="form-control mt-6 md:col-span-2">
+                                <div className="form-control mt-4 md:col-span-2">
                                     <button className="btn bg-orange-400 text-white text-lg font-semibold w-full">Register</button>
                                 </div>
                             </form>

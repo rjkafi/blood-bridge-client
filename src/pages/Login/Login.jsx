@@ -1,4 +1,4 @@
-import Swal from "sweetalert2"; 
+import Swal from "sweetalert2";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 import animationData from "../../lottie/login.json";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -6,24 +6,18 @@ import { useState } from "react";
 import Lottie from "lottie-react";
 import useAuth from "../../hooks/useAuth";
 import useAxiosPublic from "../../hooks/useAxiosPublic";
+import { useForm } from "react-hook-form";
 
 const Login = () => {
+    const { register, handleSubmit, reset, formState: { errors }, getValues } = useForm();
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState({});
-    const [email, setEmail] = useState("");
-    const {signInUser}=useAuth();
+    const { signInUser, forgotPassword } = useAuth();
     const location = useLocation();
     const navigate = useNavigate();
-    const axiosPublic=useAxiosPublic();
+    const axiosPublic = useAxiosPublic();
 
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const form = e.target;
-        const email = form.email.value;
-        const password = form.password.value;
-
-        signInUser(email, password)
+    const onSubmit = async (data) => {
+        signInUser(data.email, data.password)
             .then(async (result) => {
                 const user = result.user;
                 console.log(user)
@@ -47,14 +41,46 @@ const Login = () => {
                     icon: "error",
                     confirmButtonText: "OK",
                 });
-                setError({ ...error, login: "Invalid email/password" });
             });
-    };
+    }
+
+   
 
     const togglePassword = (e) => {
         e.preventDefault();
         setShowPassword(!showPassword);
     };
+    // Forgot Password functionality
+    const handleForgotPassword = () => {
+        // Get email from react-hook-form
+        const email = getValues("email");
+        if (!email) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Enter Email',
+                text: 'Please type your email first before clicking "Forgot password".',
+            });
+            return;
+        }
+        // forgot password function calling
+        forgotPassword(email)
+            .then(() => {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Reset Link Sent',
+                    text: 'Check your email inbox or spam folder.',
+                    timer: 2500,
+                    showConfirmButton: false,
+                });
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message,
+                });
+            });
+    }
 
     return (
         <>
@@ -66,51 +92,57 @@ const Login = () => {
                         </div>
                         <div className="card py-7 bg-base-100 w-full max-w-lg shrink-0 shadow-2xl">
                             <h3 className="text-3xl font-bold text-center">Welcome Back!</h3>
-                            <form onSubmit={handleSubmit} className="px-8">
+                            <form
+                                onSubmit={handleSubmit(onSubmit)}
+                                className="card-body">
+
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Email</span>
                                     </label>
-                                    <input
-                                        type="email"
-                                        placeholder="email"
-                                        name="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="input input-bordered"
-                                        required
-                                    />
+                                    <input type="email"  {...register("email", { required: true })} name="email" placeholder="email" className="input input-bordered" />
+                                    {errors.email && <span className="text-red-600">Email is required</span>}
                                 </div>
+
+
+
                                 <div className="form-control relative">
                                     <label className="label">
                                         <span className="label-text">Password</span>
                                     </label>
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        placeholder="password"
-                                        name="password"
-                                        className="input input-bordered"
-                                        required
-                                    />
+                                    <input type={showPassword ? "text" : "password"}  {...register("password", {
+                                        required: true,
+                                        minLength: 6,
+                                        maxLength: 16,
+                                        pattern: /^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).*$/
+                                    })} placeholder="password" className="input input-bordered" />
+                                    {errors.password?.type === 'required' &&
+                                        <p className="text-red-600">Password is required</p>}
+                                    {errors.password?.type === 'minLength' && <p className="text-red-600">Password must be 6 characters</p>}
+                                    {errors.password?.type === 'maxLength' && <p className="text-red-600">Password must be less than 16 characters</p>}
+                                    {errors.password?.type === 'pattern' && <p className="text-red-600">Password must have one Uppercase,  one lower case and one number .</p>}
+                                    {/* Eye buttons */}
                                     <button
                                         onClick={togglePassword}
                                         className="absolute right-4 top-12 text-xl"
                                     >
                                         {showPassword ? <IoMdEyeOff /> : <IoMdEye />}
                                     </button>
-                                    <label className="label">
-                                        <Link className="label-text-alt link link-hover text-blue-500">
-                                            Forgot password?
-                                        </Link>
-                                    </label>
+
                                 </div>
-                                <div className="form-control mt-6 mb-3">
-                                    <button className="btn bg-orange-400 text-white text-lg font-semibold w-full">
+
+                                {/* forgot password */}
+                                <label className="label">
+                                    <Link onClick={handleForgotPassword} className="label-text-alt hover:underline link link-hover text-blue-500">
+                                        Forgot password?
+                                    </Link>
+                                </label>
+                                <div className="form-control ">
+                                    <button type="submit" value="Log in" className="btn bg-orange-400 text-white text-lg font-semibold w-full">
                                         Login
                                     </button>
                                 </div>
                             </form>
-
                             <p className="text-center font-semibold">
                                 Don't have an Account?{" "}
                                 <Link className="text-red-600" to="/register">
@@ -120,7 +152,7 @@ const Login = () => {
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </>
     );
 };

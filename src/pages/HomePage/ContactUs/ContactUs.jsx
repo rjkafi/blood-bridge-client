@@ -17,16 +17,16 @@ const ContactUs = () => {
                                 Don't hesitate to reach out to us.
                             </p>
                             <div className="flex space-x-4 mt-6">
-                                <a href="#" className="text-base-content hover:text-red-500 text-2xl">
+                                <a href="https://www.facebook.com/" className="text-base-content hover:text-red-500 text-2xl">
                                     <FaFacebookF />
                                 </a>
-                                <a href="#" className="text-base-content hover:text-red-500 text-2xl">
+                                <a href="https://x.com/" className="text-base-content hover:text-red-500 text-2xl">
                                     <FaTwitter />
                                 </a>
-                                <a href="#" className="text-base-content hover:text-red-500 text-2xl">
+                                <a href="https://www.linkedin.com/" className="text-base-content hover:text-red-500 text-2xl">
                                     <FaLinkedinIn />
                                 </a>
-                                <a href="#" className="text-base-content hover:text-red-500 text-2xl">
+                                <a href="https://www.instagram.com/" className="text-base-content hover:text-red-500 text-2xl">
                                     <FaInstagram />
                                 </a>
                             </div>

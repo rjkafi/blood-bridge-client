@@ -66,7 +66,7 @@ const Blog = () => {
                 alt={blog.title}
                 className="w-full h-72 object-cover"
               />
-              <div className="p-4 bg-base-100 base-content">
+              <div className="p-4 bg-base-100 base-content border">
                 <h3 className="text-2xl font-semibold mb-2 ">{blog.title}</h3>
                 <p className="text-xl  flex items-center space-x-2">
                   <MdPublishedWithChanges className='mr-2' />
@@ -85,6 +85,11 @@ const Blog = () => {
           <p>No blogs available.</p>
         )}
       </div>
+      {
+          blogs?.length > 0 && (<p className='text-gray-500 text-lg text-center'>
+            {`Showing ${blogs.length} of ${blogs.length}  articles`}
+          </p>)
+        }
 
     </div>
   );

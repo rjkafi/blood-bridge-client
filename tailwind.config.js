@@ -6,14 +6,25 @@ export default {
   ],
   theme: {
     extend: {
-      animation: {
-        marquee: "marquee 15s linear infinite",
-      },
       keyframes: {
         marquee: {
           from: { transform: "translateX(100%)" },
           to: { transform: "translateX(-100%)" },
         },
+        fadeUp: {
+          '0%': {
+            opacity: '0',
+            transform: 'translateY(20px)',
+          },
+          '100%': {
+            opacity: '1',
+            transform: 'translateY(0)',
+          },
+        },
+      },
+      animation: {
+        marquee: "marquee 15s linear infinite",
+        fadeUp: "fadeUp 1s ease-out forwards",
       },
     },
   },

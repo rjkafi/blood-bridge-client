@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { FaHandHoldingHeart } from "react-icons/fa";
 import { GrSchedules } from "react-icons/gr";
 import { IoManSharp } from "react-icons/io5";
@@ -26,13 +27,19 @@ const Featured = () => {
                             { icon: <GrSchedules />, title: "Donation Schedule", text: "Schedule your donation at your convenience. We value your contribution." },
                             { icon: <MdGroups2 />, title: "Join Our Community", text: "Become a part of our blood donation community and help us spread awareness." }
                         ].map((item, idx) => (
-                            <div key={idx} className="rounded-lg p-6 text-center bg-base-100 shadow-lg">
+                            <motion.div
+                             key={idx} 
+                             initial={{ opacity: 0, y: 50 }}
+                             whileInView={{ opacity: 1, y: 0 }}
+                             transition={{ duration: 0.6, delay: idx * 0.2 }} 
+                             viewport={{ once: false, amount: 0.4 }}
+                             className="rounded-lg p-6 text-center bg-base-100 dark:bg-red-400 shadow-lg border">
                                 <div className="flex items-center justify-center text-red-500 text-4xl mb-4">
                                     {item.icon}
                                 </div>
                                 <h4 className="text-xl font-semibold text-base-content mb-2">{item.title}</h4>
                                 <p className="text-base-content">{item.text}</p>
-                            </div>
+                            </motion.div>
                         ))}
                     </div>
                 </div>

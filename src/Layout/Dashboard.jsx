@@ -20,7 +20,7 @@ const Dashboard = () => {
 
     // Conditional rendering based on role
     const renderNavLinks = () => {
-        if (userRole === "admin") {
+        if (userRole ==="admin") {
             return (
                 <>
                     <li><NavLink to="/dashboard/adminHome" className="text-white ">Overview</NavLink></li>
@@ -29,7 +29,7 @@ const Dashboard = () => {
                     <li><NavLink to="/dashboard/content-management" className="text-white ">Content Management</NavLink></li>
                 </>
             );
-        }else if (userRole === "donor") {
+        }else if (userRole ==="donor") {
             // console.log(user?.role);
             
             return (
@@ -39,7 +39,7 @@ const Dashboard = () => {
                     <li><NavLink to="/dashboard/create-donation-request" className="text-white ">Create Donation Request</NavLink></li>
                 </>
             );
-        }else if (userRole === "volunteer") {
+        }else if (userRole ==="volunteer") {
             return (
                 <>
                 

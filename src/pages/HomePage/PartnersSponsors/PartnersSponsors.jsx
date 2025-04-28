@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 const PartnersSponsors = () => {
     const partners = [
@@ -11,14 +12,18 @@ const PartnersSponsors = () => {
 
     return (
         <div className="my-16 px-6 overflow-hidden">
-            <div className="max-w-7xl mx-auto text-center">
+            <motion.div
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                className="max-w-7xl mx-auto text-center">
                 <h2 className="text-4xl font-bold text-base-content">
                     Our Partners & Sponsors
                 </h2>
                 <p className="text-lg text-base-content mt-2">
                     We are proud to be supported by these amazing organizations.
                 </p>
-            </div>
+            </motion.div>
 
             {/* Marquee Effect Container */}
             <div className="relative mt-8 overflow-hidden whitespace-nowrap">
