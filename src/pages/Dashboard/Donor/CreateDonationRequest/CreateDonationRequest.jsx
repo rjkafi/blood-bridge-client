@@ -8,7 +8,7 @@ import upazilas from '../../../../json/upazilas.json';
 
 const CreateDonationRequest = () => {
     // State for form fields
-    const [requesterName, setRequesterName] = useState(""); 
+    const [requesterName, setRequesterName] = useState("");
     const [requesterEmail, setRequesterEmail] = useState("");
     const [recipientName, setRecipientName] = useState("");
     const [recipientDistrict, setRecipientDistrict] = useState('');
@@ -19,7 +19,8 @@ const CreateDonationRequest = () => {
     const [donationDate, setDonationDate] = useState("");
     const [donationTime, setDonationTime] = useState("");
     const [requestMessage, setRequestMessage] = useState("");
-    const [status] = useState("pending"); 
+    const [filteredUpazilas, setFilteredUpazilas] = useState([]);
+    const [status] = useState("pending");
     const axiosPublic = useAxiosPublic();
     const { user } = useAuth();
     const navigate = useNavigate();
@@ -38,6 +39,16 @@ const CreateDonationRequest = () => {
 
         fetchUserData();
     }, [axiosPublic]);
+    useEffect(() => {
+        if (recipientDistrict) {
+            // Filter Upazilas based on selected recipientDistrict
+            const filtered = upazilas.filter((recipientUpazila) => recipientUpazila.district_id === districts.find(d => d.name === recipientDistrict)?.id);
+            setFilteredUpazilas(filtered);
+            setRecipientUpazila(''); // Reset recipientUpazila selection
+        } else {
+            setFilteredUpazilas([]);
+        }
+    }, [recipientDistrict]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -89,7 +100,7 @@ const CreateDonationRequest = () => {
                         className="p-2 border rounded w-full"
                     />
                 </div>
-                
+
                 <div className="mb-4">
                     <label htmlFor="requesterEmail" className="block">Requester Email</label>
                     <input
@@ -120,10 +131,8 @@ const CreateDonationRequest = () => {
                         onChange={(e) => setRecipientDistrict(e.target.value)}
                     >
                         <option value="">Select District</option>
-                        {districts.map((district) => (
-                            <option key={district.id} value={district.name}>
-                                {district.name}
-                            </option>
+                        {districts.map(d => (
+                            <option key={d.id} value={d.name}>{d.name}</option>
                         ))}
                     </select>
                 </div>
@@ -134,13 +143,12 @@ const CreateDonationRequest = () => {
                         id="recipientUpazila"
                         value={recipientUpazila}
                         onChange={(e) => setRecipientUpazila(e.target.value)}
+                        disabled={!recipientDistrict}
                         className="p-2 border rounded w-full"
                     >
                         <option value="">Select Upazila</option>
-                        {upazilas.map((upazila) => (
-                            <option key={upazila.id} value={upazila.name}>
-                                {upazila.name}
-                            </option>
+                        {filteredUpazilas.map(u => (
+                            <option key={u.id} value={u.name}>{u.name}</option>
                         ))}
                     </select>
                 </div>

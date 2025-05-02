@@ -1,21 +1,31 @@
 import React from 'react';
+import { motion } from "motion/react"
 
 const FAQSection = () => {
   return (
     <div className="faq-section w-full">
       {/* Section Title and Subtitle */}
       <div className="section-header text-center mb-8">
-        <h2 className="text-3xl font-semibold">Frequently Asked Questions</h2>
-        <p className=" text-base-content mt-2">
+        <motion.h2 
+        transition={{ duration: 0.9, ease: "easeOut" }}
+        initial={{ opacity: 0, y: -30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="text-3xl font-semibold">Frequently Asked Questions</motion.h2>
+        <motion.p 
+        transition={{ duration: 0.9, ease: "easeInOut" }}
+        initial={{ opacity: 0, x: -100 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        className=" text-base-content mt-2">
           Get answers to common questions about blood donation and how you can help save lives.
-        </p>
+        </motion.p>
       </div>
 
       {/* FAQ Accordion and Image */}
       <div className="flex flex-col md:flex-row justify-between items-start px-3">
         <div className="accordion w-full md:w-3/4">
           {/* First Accordion Item */}
-          <div className="collapse collapse-arrow join-item border-base-300 border mb-4">
+          <div 
+          className="collapse collapse-arrow join-item  border mb-4">
             <input type="radio" name="faq-accordion" defaultChecked />
             <div className="collapse-title text-xl font-medium">
               Who can donate blood?
@@ -26,7 +36,7 @@ const FAQSection = () => {
           </div>
           
           {/* Second Accordion Item */}
-          <div className="collapse collapse-arrow join-item border-base-300 border mb-4">
+          <div className="collapse collapse-arrow join-item  border mb-4">
             <input type="radio" name="faq-accordion" />
             <div className="collapse-title text-xl font-medium">
               Is blood donation safe?
@@ -37,7 +47,7 @@ const FAQSection = () => {
           </div>
 
           {/* Third Accordion Item */}
-          <div className="collapse collapse-arrow join-item border-base-300 border mb-4">
+          <div className="collapse collapse-arrow join-item  border mb-4">
             <input type="radio" name="faq-accordion" />
             <div className="collapse-title text-xl font-medium">
               How often can I donate blood?

@@ -1,60 +1,133 @@
-import React from 'react';
+
+import { motion } from "motion/react"
+import { FaRegClipboard, FaTint, FaStethoscope, FaMugHot } from "react-icons/fa";
+
+const steps = [
+  {
+    icon: <FaRegClipboard className="text-blue-500 text-3xl" />,
+    title: "Registration",
+    description: "Create your donor profile and complete the registration process.",
+    button: "Register Now",
+    buttonLink: "/register",
+  },
+  {
+    icon: <FaTint className="text-red-500 text-3xl" />,
+    title: "Blood Donation",
+    description: "Takes only 8-10 minutes.",
+    details: [
+      "Sterile equipment",
+      "Professional staff",
+      "Comfortable environment",
+    ],
+  },
+  {
+    icon: <FaStethoscope className="text-green-500 text-3xl" />,
+    title: "Health Screening",
+    description: "Ensure you are healthy before donation.",
+    details: [
+      "Blood pressure check",
+      "Hemoglobin test",
+      "Basic health assessment",
+    ],
+  },
+  {
+    icon: <FaMugHot className="text-red-500 text-3xl" />,
+    title: "Rest & Refresh",
+    description: "Relax after your donation with refreshments.",
+    details: [
+      "Light refreshments",
+      "15-minute rest",
+      "Post-donation care",
+    ],
+  },
+];
 
 const DonationProcess = () => {
   return (
-    <div className="donation-process mb-12">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-semibold text-base-content">How the Donation Process Works</h2>
-        <p className="text-xl text-base-content mt-4">A simple and safe step-by-step guide to help you donate blood and save lives.</p>
+    <section className="py-16 md:py-24 bg-background">
+      <div className="container px-4 md:px-6">
+        {/* Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">Donation Process</h2>
+          <p className=" max-w-2xl mx-auto">
+            Your journey to saving lives starts here
+          </p>
+        </motion.div>
+
+        <div className="relative">
+          {/* Vertical Line */}
+          <div className="absolute hidden lg:block left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 -translate-x-1/2 z-0" />
+
+          <div className="relative z-10 space-y-12 lg:space-y-0">
+            {steps.map((step, index) => (
+              <motion.div
+              key={index}
+              initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.9, ease: "easeOut" }}
+              viewport={{ once: false, amount: 0.5 }}
+              whileHover={{ scale: 0.9 }}
+              whileTap={{ scale: 0.6}}
+              className={`flex flex-col lg:flex-row gap-8 items-center ${
+                index % 2 === 1 ? "lg:flex-row-reverse" : ""
+              }`}
+              >
+                {/* Step Card */}
+                <div className="w-full lg:w-1/2 flex justify-center ">
+                  <div
+                    className={`w-full max-w-lg p-6   border-l-4 border-primary shadow-md rounded-lg relative ${
+                      index % 2 === 0 ? "lg:mr-8 border" : "lg:ml-8 border"
+                    }`}
+                  >
+                    <div className="flex items-start gap-4">
+                      {/* Icon */}
+                      <div className="p-3 rounded-lg bg-gray-100">
+                        {step.icon}
+                      </div>
+
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold  text-base-content mb-2">
+                          {step.title}
+                        </h3>
+                        <p className="text-base-content mb-4">{step.description}</p>
+
+                        {/* Details list */}
+                        {step.details && (
+                          <ul className="list-disc list-inside space-y-1 text-gray-600 text-sm">
+                            {step.details.map((detail, idx) => (
+                              <li key={idx}>{detail}</li>
+                            ))}
+                          </ul>
+                        )}
+
+                        {/* Button */}
+                        {step.button && (
+                          <a
+                            href={step.buttonLink}
+                            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition"
+                          >
+                            {step.button} →
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Step Number */}
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-500 text-white font-bold text-lg">
+                  {index + 1}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
-      
-      <div className="steps-container max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4">
-        {/* Step 1 */}
-        <div className="step-card p-6 rounded-lg shadow-lg bg-base-100 dark:bg-gray-800">
-          <div className="step-number bg-red-500 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold mb-6">
-            1
-          </div>
-          <h3 className="text-2xl font-semibold text-base-content dark:text-white">Register Online</h3>
-          <p className="text-base-content mt-2 dark:text-gray-300">Fill out a quick registration form to schedule your donation appointment.</p>
-        </div>
-
-        {/* Step 2 */}
-        <div className="step-card p-6 rounded-lg shadow-lg bg-base-100 dark:bg-gray-800">
-          <div className="step-number bg-red-500 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold mb-6">
-            2
-          </div>
-          <h3 className="text-2xl font-semibold text-base-content dark:text-white">Visit a Donation Center</h3>
-          <p className="text-base-content mt-2 dark:text-gray-300">Head to your nearest donation center on your scheduled date and time.</p>
-        </div>
-
-        {/* Step 3 */}
-        <div className="step-card p-6 rounded-lg shadow-lg bg-base-100 dark:bg-gray-800">
-          <div className="step-number bg-red-500 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold mb-6">
-            3
-          </div>
-          <h3 className="text-2xl font-semibold text-base-content dark:text-white">Donation Process</h3>
-          <p className="text-base-content mt-2 dark:text-gray-300">Relax as the trained medical staff carefully and safely collect your blood.</p>
-        </div>
-
-        {/* Step 4 */}
-        <div className="step-card p-6 rounded-lg shadow-lg bg-base-100 dark:bg-gray-800">
-          <div className="step-number bg-red-500 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold mb-6">
-            4
-          </div>
-          <h3 className="text-2xl font-semibold text-base-content dark:text-white">Post-Donation Care</h3>
-          <p className="text-base-content mt-2 dark:text-gray-300">Enjoy a healthy snack and drink to help you recover after your donation.</p>
-        </div>
-
-        {/* Step 5 */}
-        <div className="step-card p-6 rounded-lg shadow-lg bg-base-100 dark:bg-gray-800">
-          <div className="step-number bg-red-500 text-white rounded-full w-12 h-12 flex items-center justify-center text-2xl font-bold mb-6">
-            5
-          </div>
-          <h3 className="text-2xl font-semibold text-base-content dark:text-white">Thank You!</h3>
-          <p className="text-base-content mt-2 dark:text-gray-300">You're a hero! Your donation helps save lives.</p>
-        </div>
-      </div>
-    </div>
+    </section>
   );
 };
 

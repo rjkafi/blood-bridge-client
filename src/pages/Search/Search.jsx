@@ -74,7 +74,7 @@ const Search = () => {
             onChange={(e) => setUpazila(e.target.value)}
             disabled={!district} 
           >
-            <option value="">Select Upazila</option>
+            <option value={filteredUpazilas}>Select Upazila</option>
             {filteredUpazilas.map(u => (
               <option key={u.id} value={u.name}>{u.name}</option>
             ))}
@@ -100,7 +100,7 @@ const Search = () => {
               </div>
             ))
           ) : (
-            <p className="text-center text-xl text-gray-400">No Search donors found</p>
+            <p className="text-center text-xl text-gray-400">No  donors found</p>
           )}
         </div>
       </div>

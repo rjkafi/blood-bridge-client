@@ -4,6 +4,7 @@ import { TbLogout } from "react-icons/tb";
 import { TiWeatherSunny } from "react-icons/ti";
 import { BsMoon } from "react-icons/bs";
 import { useState, useEffect } from "react";
+import { FaUser } from "react-icons/fa";
 
 const Navbar = () => {
   const { user, signOutUser } = useAuth();
@@ -134,7 +135,7 @@ const Navbar = () => {
         <ul className=" menu-horizontal px-1">{navOptions}</ul>
       </div>
 
-      <div className="navbar-end md:pr-5">
+      <div className="navbar-end md:pr-5 items-center">
         <button
           className="text-2xl cursor-pointer text-base-content btn hover:bg-base-300 btn-circle btn-ghost hover:text-orange-500"
           onClick={toggleDarkMode}
@@ -144,12 +145,20 @@ const Navbar = () => {
         {user && user?.email ? (
           <div className="flex items-center space-x-2">
             <div className="dropdown dropdown-end">
-              <label tabIndex={0} className="">
-                <img
-                  className="h-12 w-12 rounded-full cursor-pointer"
-                  src={user.photoURL}
+              <label tabIndex={0} className=" ">
+                {
+                  user?.photoURL ?  (
+                    <img
+                  className="h-10 w-10 border rounded-full cursor-pointer"
+                  src={user?.photoURL}
                   alt="user"
                 />
+                  ) : (
+                    <FaUser className="h-10 w-10 border text-gray-600 rounded-full cursor-pointer"></FaUser>
+
+                  )
+                }
+                
               </label>
               <ul
                 tabIndex={0}

@@ -207,7 +207,7 @@ const EditDonationRequest = () => {
                     ></textarea>
                 </div>
 
-                <button type="submit" className="btn btn-success">Update Donation Request</button>
+                <button type="submit" className="btn bg-blue-400 text-white text-xl font-semibold">Update  Request</button>
             </form>
         </div>
     );

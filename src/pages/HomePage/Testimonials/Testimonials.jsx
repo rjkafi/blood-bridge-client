@@ -1,4 +1,7 @@
+import { motion } from "motion/react"
+
 const Testimonials = () => {
+
     const testimonials = [
         {
             name: "Daniel Clifford",
@@ -40,18 +43,22 @@ const Testimonials = () => {
     return (
         <>
             <div className="my-8">
-                <div className="max-w-7xl mx-auto text-center">
+                <motion.div
+                    transition={{ duration: 0.9, ease: "easeOut" }}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    className="max-w-7xl mx-auto text-center">
                     <h2 className="text-4xl font-bold text-base-content">
                         What Our Donors Say
                     </h2>
                     <p className="text-lg text-base-content mt-2">
                         Hear from people who have made a difference by donating blood.
                     </p>
-                </div>
+                </motion.div>
             </div>
             <div className="carousel carousel-center container mx-auto dark:bg-gray-900 transition-all p-6">
                 {testimonials.map((testimonial, index) => (
-                    <div key={index} className="carousel-item max-w-md p-6 rounded-lg shadow-lg mx-3 min-w-[320px] md:min-w-[400px]  dark:bg-gray-800 dark:text-white">
+                    <div key={index} className="carousel-item max-w-md border p-6 rounded-lg shadow-lg mx-3 min-w-[320px] md:min-w-[400px]  dark:bg-gray-800 dark:text-white">
                         <div className="flex flex-col items-center text-center">
                             <div className="avatar">
                                 <div className="w-20 h-20 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
