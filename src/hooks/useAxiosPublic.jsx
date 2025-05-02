@@ -3,7 +3,8 @@ import axios from "axios";
 
 
 const axiosPublic= axios.create({
-    baseURL:'https://blood-bridge-server-steel.vercel.app'
+    // baseURL:'https://blood-bridge-server-steel.vercel.app'
+    baseURL:'http://localhost:5000'
 })
 
 const useAxiosPublic = () => {
