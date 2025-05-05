@@ -1,5 +1,5 @@
-
-import { motion } from "motion/react"
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { FaRegClipboard, FaTint, FaStethoscope, FaMugHot } from "react-icons/fa";
 
 const steps = [
@@ -14,35 +14,36 @@ const steps = [
     icon: <FaTint className="text-red-500 text-3xl" />,
     title: "Blood Donation",
     description: "Takes only 8-10 minutes.",
-    details: [
-      "Sterile equipment",
-      "Professional staff",
-      "Comfortable environment",
-    ],
+    details: ["Sterile equipment", "Professional staff", "Comfortable environment"],
   },
   {
     icon: <FaStethoscope className="text-green-500 text-3xl" />,
     title: "Health Screening",
     description: "Ensure you are healthy before donation.",
-    details: [
-      "Blood pressure check",
-      "Hemoglobin test",
-      "Basic health assessment",
-    ],
+    details: ["Blood pressure check", "Hemoglobin test", "Basic health assessment"],
   },
   {
     icon: <FaMugHot className="text-red-500 text-3xl" />,
     title: "Rest & Refresh",
     description: "Relax after your donation with refreshments.",
-    details: [
-      "Light refreshments",
-      "15-minute rest",
-      "Post-donation care",
-    ],
+    details: ["Light refreshments", "15-minute rest", "Post-donation care"],
   },
 ];
 
 const DonationProcess = () => {
+  const [isMediumUp, setIsMediumUp] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMediumUp(window.innerWidth >= 768);
+    };
+
+    handleResize(); // Check on mount
+    window.addEventListener("resize", handleResize); // Update on resize
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <section className="py-16 md:py-24 bg-background">
       <div className="container px-4 md:px-6">
@@ -53,33 +54,40 @@ const DonationProcess = () => {
           className="text-center mb-12"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-4">Donation Process</h2>
-          <p className=" max-w-2xl mx-auto">
+          <p className="max-w-2xl mx-auto">
             Your journey to saving lives starts here
           </p>
         </motion.div>
 
         <div className="relative">
-          {/* Vertical Line */}
+          {/* Vertical line on large screens */}
           <div className="absolute hidden lg:block left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 -translate-x-1/2 z-0" />
 
           <div className="relative z-10 space-y-12 lg:space-y-0">
             {steps.map((step, index) => (
               <motion.div
-              key={index}
-              initial={{ opacity: 0, x: index % 2 === 0 ? -100 : 100 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.9, ease: "easeOut" }}
-              viewport={{ once: false, amount: 0.5 }}
-              whileHover={{ scale: 0.9 }}
-              whileTap={{ scale: 0.6}}
-              className={`flex flex-col lg:flex-row gap-8 items-center ${
-                index % 2 === 1 ? "lg:flex-row-reverse" : ""
-              }`}
+                key={index}
+                initial={
+                  isMediumUp
+                    ? {
+                        opacity: 0,
+                        x: index % 2 === 0 ? -100 : 100,
+                      }
+                    : { opacity: 1, x: 0, y: 0 } // no motion for small
+                }
+                whileInView={isMediumUp ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                viewport={{ once: true, amount: 0.5 }}
+                whileHover={isMediumUp ? { scale: 0.98 } : {}}
+                whileTap={isMediumUp ? { scale: 0.95 } : {}}
+                className={`flex flex-col lg:flex-row gap-6 items-start ${
+                  index % 2 === 1 ? "lg:flex-row-reverse" : ""
+                }`}
               >
                 {/* Step Card */}
-                <div className="w-full lg:w-1/2 flex justify-center ">
+                <div className="w-full lg:w-1/2 flex justify-center">
                   <div
-                    className={`w-full max-w-lg p-6   border-l-4 border-primary shadow-md rounded-lg relative ${
+                    className={`w-full max-w-lg p-6 border-l-4 border-primary shadow-md rounded-lg relative ${
                       index % 2 === 0 ? "lg:mr-8 border" : "lg:ml-8 border"
                     }`}
                   >
@@ -90,7 +98,7 @@ const DonationProcess = () => {
                       </div>
 
                       <div className="flex-1">
-                        <h3 className="text-2xl font-bold  text-base-content mb-2">
+                        <h3 className="text-2xl font-bold text-base-content mb-2">
                           {step.title}
                         </h3>
                         <p className="text-base-content mb-4">{step.description}</p>
